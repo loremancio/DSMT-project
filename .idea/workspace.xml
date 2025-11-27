@@ -10,11 +10,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="93be9511-f638-459c-8ac6-7cf3751c376c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/TestController.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/TestController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/TestController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/main/java/com/dsmt/webapp/HelloServlet.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/main/webapp/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/src/main/webapp/index.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/target/classes/com/dsmt/webapp/HelloServlet.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/target/webapp-1.0-SNAPSHOT/WEB-INF/classes/com/dsmt/webapp/HelloServlet.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/target/webapp-1.0-SNAPSHOT/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/target/webapp-1.0-SNAPSHOT/index.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,35 +61,40 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "Spring Boot.JavaBackendApplication (1).executor": "Run",
-    "Spring Boot.JavaBackendApplication.executor": "Run",
-    "Tomcat Server.Tomcat 11.0.141.executor": "Run",
-    "Tomcat Server.test.executor": "Run",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/loren/Documents/GitHub/DSMT-project",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.keymap",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Spring Boot.JavaBackendApplication (1).executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.JavaBackendApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Tomcat Server.Tomcat 11.0.141.executor&quot;: &quot;Run&quot;,
+    &quot;Tomcat Server.test.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/loren/Documents/GitHub/DSMT-project&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
+    ]
   }
-}]]></component>
+}</component>
   <component name="RunDashboard">
     <option name="configurationStatuses">
       <map>
@@ -124,7 +133,6 @@
       </deployment>
       <server-settings>
         <option name="BASE_DIRECTORY_NAME" value="fafa748e-6389-4094-b1a9-87bd566aa6cf" />
-        <option name="HTTP_PORT" value="8081" />
       </server-settings>
       <predefined_log_file enabled="true" id="Tomcat" />
       <predefined_log_file enabled="true" id="Tomcat Catalina" />
@@ -228,6 +236,12 @@
       <workItem from="1764062880845" duration="2611000" />
       <workItem from="1764066676514" duration="334000" />
       <workItem from="1764068610182" duration="1378000" />
+      <workItem from="1764081518333" duration="1885000" />
+      <workItem from="1764169518696" duration="1503000" />
+      <workItem from="1764171748266" duration="8037000" />
+      <workItem from="1764238366341" duration="2720000" />
+      <workItem from="1764258916676" duration="4000" />
+      <workItem from="1764259004718" duration="3694000" />
     </task>
     <servers />
   </component>
