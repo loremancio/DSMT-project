@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
-      <artifact name="webapp:war exploded" />
+      <artifact name="java_backend:war exploded" />
     </artifacts-to-build>
   </component>
   <component name="AutoImportSettings">
@@ -10,15 +10,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="93be9511-f638-459c-8ac6-7cf3751c376c" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/java_backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/TestController.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/java_backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/src/main/java/com/dsmt/webapp/HelloServlet.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/src/main/webapp/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/src/main/webapp/index.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/target/classes/com/dsmt/webapp/HelloServlet.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/target/webapp-1.0-SNAPSHOT/WEB-INF/classes/com/dsmt/webapp/HelloServlet.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/target/webapp-1.0-SNAPSHOT/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/target/webapp-1.0-SNAPSHOT/index.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,6 +34,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;matte3112&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/loremancio/DSMT-project.git&quot;,
+    &quot;accountId&quot;: &quot;ad4b39e6-272b-42e8-87a4-136d8ccd164d&quot;
+  }
+}</component>
   <component name="LogFilters">
     <option name="FILTER_ERRORS" value="false" />
     <option name="FILTER_WARNINGS" value="false" />
@@ -88,11 +96,6 @@
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
-  },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;
-    ]
   }
 }</component>
   <component name="RunDashboard">
@@ -101,22 +104,16 @@
         <entry key="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory">
           <value>
             <map>
-              <entry key="Tomcat 11.0.141" value="STOPPED" />
+              <entry key="Tomcat 11.0.141" value="FAILED" />
+              <entry key="test" value="STOPPED" />
             </map>
           </value>
         </entry>
       </map>
     </option>
   </component>
-  <component name="RunManager" selected="Compound.Start">
-    <configuration name="Start" type="CompoundRunConfigurationType">
-      <toRun name="JavaBackendApplication" type="SpringBootApplicationConfigurationType" />
-      <toRun name="Tomcat 11.0.141" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Spring Boot.JavaBackendApplication">
     <configuration name="JavaBackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-      <option name="ALTERNATIVE_JRE_PATH" value="openjdk-21" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <module name="java_backend" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.dsmt.java_backend.JavaBackendApplication" />
       <method v="2">
@@ -125,9 +122,9 @@
     </configuration>
     <configuration name="Tomcat 11.0.141" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 11.0.141" ALTERNATIVE_JRE_ENABLED="false">
       <deployment>
-        <artifact name="webapp:war exploded">
+        <artifact name="java_backend:war exploded">
           <settings>
-            <option name="CONTEXT_PATH" value="/webapp_war_exploded" />
+            <option name="CONTEXT_PATH" value="/java_backend_war_exploded" />
           </settings>
         </artifact>
       </deployment>
@@ -205,21 +202,101 @@
       <method v="2">
         <option name="Make" enabled="true" />
         <option name="BuildArtifacts" enabled="true">
-          <artifact name="webapp:war exploded" />
+          <artifact name="java_backend:war exploded" />
         </option>
       </method>
     </configuration>
+    <configuration name="test" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 11.0.141" ALTERNATIVE_JRE_ENABLED="false">
+      <option name="UPDATING_POLICY" value="restart-server" />
+      <deployment />
+      <server-settings>
+        <option name="BASE_DIRECTORY_NAME" value="976cab10-1bf8-4054-ab6d-43fb361d55e0" />
+        <option name="HTTP_PORT" value="8081" />
+      </server-settings>
+      <predefined_log_file enabled="true" id="Tomcat" />
+      <predefined_log_file enabled="true" id="Tomcat Catalina" />
+      <predefined_log_file id="Tomcat Manager" />
+      <predefined_log_file id="Tomcat Host Manager" />
+      <predefined_log_file id="Tomcat Localhost Access" />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="52225" />
+      </RunnerSettings>
+      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Cover">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Debug">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Profile">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Run">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <method v="2">
+        <option name="Make" enabled="true" />
+        <option name="BuildArtifacts" enabled="false" />
+      </method>
+    </configuration>
     <list>
-      <item itemvalue="Compound.Start" />
       <item itemvalue="Spring Boot.JavaBackendApplication" />
+      <item itemvalue="Tomcat Server.test" />
       <item itemvalue="Tomcat Server.Tomcat 11.0.141" />
     </list>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.27397.103" />
-        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-IU-252.27397.103" />
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.28238.7" />
+        <option value="bundled-js-predefined-d6986cc7102b-a71380e98a7c-JavaScript-IU-252.28238.7" />
       </set>
     </attachedChunks>
   </component>
@@ -233,15 +310,8 @@
       <workItem from="1763997387284" duration="2800000" />
       <workItem from="1764001889579" duration="1637000" />
       <workItem from="1764004248536" duration="1253000" />
-      <workItem from="1764062880845" duration="2611000" />
-      <workItem from="1764066676514" duration="334000" />
-      <workItem from="1764068610182" duration="1378000" />
-      <workItem from="1764081518333" duration="1885000" />
-      <workItem from="1764169518696" duration="1503000" />
-      <workItem from="1764171748266" duration="8037000" />
-      <workItem from="1764238366341" duration="2720000" />
-      <workItem from="1764258916676" duration="4000" />
-      <workItem from="1764259004718" duration="3694000" />
+      <workItem from="1764690048028" duration="1517000" />
+      <workItem from="1764716947856" duration="1327000" />
     </task>
     <servers />
   </component>
