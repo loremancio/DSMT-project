@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
-      <artifact name="java_backend:war exploded" />
+      <artifact name="webapp:war" />
     </artifacts-to-build>
   </component>
   <component name="AutoImportSettings">
@@ -11,6 +11,9 @@
   <component name="ChangeListManager">
     <list default="true" id="93be9511-f638-459c-8ac6-7cf3751c376c" name="Changes" comment="aggiunto le funzionalità di base per la registrazione e login lato backend">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/target/webapp-1.0-SNAPSHOT/META-INF/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/target/webapp-1.0-SNAPSHOT/META-INF/MANIFEST.MF" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/target/webapp-1.0-SNAPSHOT/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/target/webapp-1.0-SNAPSHOT/index.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,6 +26,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Jsp File" />
         <option value="Class" />
       </list>
     </option>
@@ -87,7 +91,7 @@
     "Spring Boot.JavaBackendApplication.executor": "Run",
     "Tomcat Server.Tomcat 11.0.141.executor": "Run",
     "Tomcat Server.test.executor": "Run",
-    "git-widget-placeholder": "Matteo",
+    "git-widget-placeholder": "lore",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/loren/Documents/GitHub/DSMT-project",
     "node.js.detected.package.eslint": "true",
@@ -108,15 +112,19 @@
         <entry key="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory">
           <value>
             <map>
-              <entry key="Tomcat 11.0.141" value="FAILED" />
-              <entry key="test" value="STOPPED" />
+              <entry key="Tomcat 11.0.141" value="STOPPED" />
             </map>
           </value>
         </entry>
       </map>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.JavaBackendApplication">
+  <component name="RunManager" selected="Compound.RunApp">
+    <configuration name="RunApp" type="CompoundRunConfigurationType">
+      <toRun name="JavaBackendApplication" type="SpringBootApplicationConfigurationType" />
+      <toRun name="Tomcat 11.0.141" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" />
+      <method v="2" />
+    </configuration>
     <configuration name="JavaBackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="java_backend" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.dsmt.java_backend.JavaBackendApplication" />
@@ -125,15 +133,17 @@
       </method>
     </configuration>
     <configuration name="Tomcat 11.0.141" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 11.0.141" ALTERNATIVE_JRE_ENABLED="false">
+      <option name="UPDATING_POLICY" value="hot-swap-classes" />
       <deployment>
-        <artifact name="java_backend:war exploded">
+        <artifact name="webapp:war">
           <settings>
-            <option name="CONTEXT_PATH" value="/java_backend_war_exploded" />
+            <option name="CONTEXT_PATH" value="/webapp_war" />
           </settings>
         </artifact>
       </deployment>
       <server-settings>
         <option name="BASE_DIRECTORY_NAME" value="fafa748e-6389-4094-b1a9-87bd566aa6cf" />
+        <option name="HTTP_PORT" value="8081" />
       </server-settings>
       <predefined_log_file enabled="true" id="Tomcat" />
       <predefined_log_file enabled="true" id="Tomcat Catalina" />
@@ -206,101 +216,21 @@
       <method v="2">
         <option name="Make" enabled="true" />
         <option name="BuildArtifacts" enabled="true">
-          <artifact name="java_backend:war exploded" />
+          <artifact name="webapp:war" />
         </option>
       </method>
     </configuration>
-    <configuration name="test" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 11.0.141" ALTERNATIVE_JRE_ENABLED="false">
-      <option name="UPDATING_POLICY" value="restart-server" />
-      <deployment />
-      <server-settings>
-        <option name="BASE_DIRECTORY_NAME" value="976cab10-1bf8-4054-ab6d-43fb361d55e0" />
-        <option name="HTTP_PORT" value="8081" />
-      </server-settings>
-      <predefined_log_file enabled="true" id="Tomcat" />
-      <predefined_log_file enabled="true" id="Tomcat Catalina" />
-      <predefined_log_file id="Tomcat Manager" />
-      <predefined_log_file id="Tomcat Host Manager" />
-      <predefined_log_file id="Tomcat Localhost Access" />
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="52225" />
-      </RunnerSettings>
-      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Cover">
-        <option name="USE_ENV_VARIABLES" value="true" />
-        <STARTUP>
-          <option name="USE_DEFAULT" value="true" />
-          <option name="SCRIPT" value="" />
-          <option name="VM_PARAMETERS" value="" />
-          <option name="PROGRAM_PARAMETERS" value="" />
-        </STARTUP>
-        <SHUTDOWN>
-          <option name="USE_DEFAULT" value="true" />
-          <option name="SCRIPT" value="" />
-          <option name="VM_PARAMETERS" value="" />
-          <option name="PROGRAM_PARAMETERS" value="" />
-        </SHUTDOWN>
-      </ConfigurationWrapper>
-      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Debug">
-        <option name="USE_ENV_VARIABLES" value="true" />
-        <STARTUP>
-          <option name="USE_DEFAULT" value="true" />
-          <option name="SCRIPT" value="" />
-          <option name="VM_PARAMETERS" value="" />
-          <option name="PROGRAM_PARAMETERS" value="" />
-        </STARTUP>
-        <SHUTDOWN>
-          <option name="USE_DEFAULT" value="true" />
-          <option name="SCRIPT" value="" />
-          <option name="VM_PARAMETERS" value="" />
-          <option name="PROGRAM_PARAMETERS" value="" />
-        </SHUTDOWN>
-      </ConfigurationWrapper>
-      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Profile">
-        <option name="USE_ENV_VARIABLES" value="true" />
-        <STARTUP>
-          <option name="USE_DEFAULT" value="true" />
-          <option name="SCRIPT" value="" />
-          <option name="VM_PARAMETERS" value="" />
-          <option name="PROGRAM_PARAMETERS" value="" />
-        </STARTUP>
-        <SHUTDOWN>
-          <option name="USE_DEFAULT" value="true" />
-          <option name="SCRIPT" value="" />
-          <option name="VM_PARAMETERS" value="" />
-          <option name="PROGRAM_PARAMETERS" value="" />
-        </SHUTDOWN>
-      </ConfigurationWrapper>
-      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Run">
-        <option name="USE_ENV_VARIABLES" value="true" />
-        <STARTUP>
-          <option name="USE_DEFAULT" value="true" />
-          <option name="SCRIPT" value="" />
-          <option name="VM_PARAMETERS" value="" />
-          <option name="PROGRAM_PARAMETERS" value="" />
-        </STARTUP>
-        <SHUTDOWN>
-          <option name="USE_DEFAULT" value="true" />
-          <option name="SCRIPT" value="" />
-          <option name="VM_PARAMETERS" value="" />
-          <option name="PROGRAM_PARAMETERS" value="" />
-        </SHUTDOWN>
-      </ConfigurationWrapper>
-      <method v="2">
-        <option name="Make" enabled="true" />
-        <option name="BuildArtifacts" enabled="false" />
-      </method>
-    </configuration>
     <list>
+      <item itemvalue="Compound.RunApp" />
       <item itemvalue="Spring Boot.JavaBackendApplication" />
-      <item itemvalue="Tomcat Server.test" />
       <item itemvalue="Tomcat Server.Tomcat 11.0.141" />
     </list>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.28238.7" />
-        <option value="bundled-js-predefined-d6986cc7102b-a71380e98a7c-JavaScript-IU-252.28238.7" />
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.27397.103" />
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-IU-252.27397.103" />
       </set>
     </attachedChunks>
   </component>
@@ -317,6 +247,8 @@
       <workItem from="1764690048028" duration="1517000" />
       <workItem from="1764716947856" duration="1327000" />
       <workItem from="1764751427081" duration="759000" />
+      <workItem from="1764796985680" duration="70000" />
+      <workItem from="1764797102301" duration="2461000" />
     </task>
     <task id="LOCAL-00001" summary="aggiunto le funzionalità di base per la registrazione e login lato backend">
       <option name="closed" value="true" />
