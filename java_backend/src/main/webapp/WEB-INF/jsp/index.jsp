@@ -2,7 +2,7 @@
 <%
     // If the user is not logged in, redirect to login page
     if (session.getAttribute("user") == null) {
-        response.sendRedirect("login.jsp");
+        response.sendRedirect("/login");
         return;
     }
 %>
@@ -13,6 +13,6 @@
 <body>
 <h1>Benvenuto, <%= session.getAttribute("nome") %> <%= session.getAttribute("cognome") %>!</h1>
 
-<a href="auth?action=logout">Logout</a>
+<a href="/logout">Logout</a>
 </body>
 </html>
