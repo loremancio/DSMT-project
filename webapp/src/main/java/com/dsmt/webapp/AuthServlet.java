@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,7 +25,27 @@ public class AuthServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Default: manda al login
+        // Retrieve action parameter
+        String action = request.getParameter("action");
+
+        // If action is logout, handle logout
+        if ("logout".equals(action)) {
+                // Retrieve the current session, if it exists
+                HttpSession session = request.getSession(false);
+
+                if (session != null) {
+                    // Invalidate the session to log out the user
+                    session.invalidate();
+                }
+
+                request.setAttribute("success", "Logout effettuato con successo. A presto!");
+
+                // Forward to login page after logout
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                return;
+        }
+
+        // Default action: show login page
         request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 
@@ -34,59 +55,68 @@ public class AuthServlet extends HttpServlet {
         String targetUrl;
         Map<String, String> jsonData = new HashMap<>();
 
-        // Variabili per capire dove tornare in caso di errore
         String errorPage = "login.jsp";
 
+        // Retrieve email and password from request
         String email = request.getParameter("email");
         String psw = request.getParameter("psw");
 
+        // If action is register, prepare registration data
         if ("register".equals(action)) {
             targetUrl = BACKEND_BASE_URL + "/register";
             errorPage = "registration.jsp"; // Se fallisce la reg, torniamo al form di reg
 
-            String nome = request.getParameter("nome");
-            String cognome = request.getParameter("cognome");
+            String name = request.getParameter("nome");
+            String surname = request.getParameter("cognome");
 
-            jsonData.put("nome", nome);
-            jsonData.put("cognome", cognome);
+            jsonData.put("nome", name);
+            jsonData.put("cognome", surname);
             jsonData.put("email", email);
             jsonData.put("psw", psw);
 
         } else if ("login".equals(action)) {
+            // If action is login, prepare login data
             targetUrl = BACKEND_BASE_URL + "/login";
-            errorPage = "login.jsp"; // Se fallisce il login, torniamo al login
+            errorPage = "login.jsp";
 
             jsonData.put("email", email);
             jsonData.put("psw", psw);
         } else {
+            // Action not recognized
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Azione non valida");
             return;
         }
 
-        // Chiamata al Backend
+        // Convert data to JSON string and send request
         String jsonInputString = new ObjectMapper().writeValueAsString(jsonData);
         HttpResult result = sendJsonRequest(targetUrl, jsonInputString);
 
+        // Handle response: if success, redirect; if error, show error message
         if (result.statusCode == 200 || result.statusCode == 201) {
-            // SUCCESSO
             if ("login".equals(action)) {
-                request.getSession().setAttribute("user", result.responseBody);
-                // Login riuscito -> vai alla Home
+                ObjectMapper mapper = new ObjectMapper();
+                Map<String, Object> userData = mapper.readValue(result.responseBody, Map.class);
+
+                String nome = (String) userData.get("nome");
+                String cognome = (String) userData.get("cognome");
+                String userEmail = (String) userData.get("email");
+
+                request.getSession().setAttribute("user", userEmail);
+                request.getSession().setAttribute("nome", nome);
+                request.getSession().setAttribute("cognome", cognome);
+
                 request.getRequestDispatcher("index.jsp").forward(request, response);
             } else {
-                // Registrazione riuscita -> vai al Login per accedere
                 request.setAttribute("success", "Registrazione completata con successo! Ora puoi accedere.");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
             }
         } else {
-            // ERRORE
             request.setAttribute("error", "Errore: " + result.responseBody);
-            // Torna alla pagina specifica (login o registrazione)
             request.getRequestDispatcher(errorPage).forward(request, response);
         }
     }
 
-    // --- Metodi Helper invariati ---
+    // Helper method to send JSON POST request
     private HttpResult sendJsonRequest(String urlString, String jsonInput) throws IOException {
         URL url = new URL(urlString);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -112,6 +142,7 @@ public class AuthServlet extends HttpServlet {
         return new HttpResult(code, response.toString());
     }
 
+    // Helper class to hold HTTP response data
     private static class HttpResult {
         int statusCode;
         String responseBody;
