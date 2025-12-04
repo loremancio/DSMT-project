@@ -11,13 +11,8 @@
   <component name="ChangeListManager">
     <list default="true" id="93be9511-f638-459c-8ac6-7cf3751c376c" name="Changes" comment="aggiunto le funzionalità di base per la registrazione e login lato backend">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/java_backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/src/main/java/com/dsmt/webapp/AuthServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/src/main/java/com/dsmt/webapp/AuthServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/src/main/webapp/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/src/main/webapp/index.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/target/webapp-1.0-SNAPSHOT.war" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/target/webapp-1.0-SNAPSHOT.war" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/target/webapp-1.0-SNAPSHOT/WEB-INF/classes/com/dsmt/webapp/AuthServlet$HttpResult.class" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/target/webapp-1.0-SNAPSHOT/WEB-INF/classes/com/dsmt/webapp/AuthServlet$HttpResult.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/target/webapp-1.0-SNAPSHOT/WEB-INF/classes/com/dsmt/webapp/AuthServlet.class" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/target/webapp-1.0-SNAPSHOT/WEB-INF/classes/com/dsmt/webapp/AuthServlet.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/target/webapp-1.0-SNAPSHOT/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/target/webapp-1.0-SNAPSHOT/index.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,8 +25,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Jsp File" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -81,35 +76,44 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;Spring Boot.JavaBackendApplication (1).executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.JavaBackendApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Tomcat Server.Tomcat 11.0.141.executor&quot;: &quot;Run&quot;,
-    &quot;Tomcat Server.test.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;lore&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/loren/Documents/GitHub/DSMT-project&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.JavaApp.executor": "Run",
+    "Spring Boot.JavaBackendApplication (1).executor": "Run",
+    "Spring Boot.JavaBackendApplication.executor": "Run",
+    "Tomcat Server.Tomcat 11.0.141.executor": "Run",
+    "Tomcat Server.test.executor": "Run",
+    "git-widget-placeholder": "lore",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/loren/Documents/GitHub/DSMT-project/java_backend/src/webapp/WEB-INF/jsp",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.keymap",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\loren\Documents\GitHub\DSMT-project\java_backend\src\webapp\WEB-INF\jsp" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\loren\Documents\GitHub\DSMT-project\java_backend\src\main" />
+    </key>
+  </component>
   <component name="RunDashboard">
     <option name="configurationStatuses">
       <map>
@@ -123,7 +127,7 @@
       </map>
     </option>
   </component>
-  <component name="RunManager" selected="Compound.RunApp">
+  <component name="RunManager" selected="Spring Boot.SpringBootStart">
     <configuration name="RunApp" type="CompoundRunConfigurationType">
       <toRun name="JavaBackendApplication" type="SpringBootApplicationConfigurationType" />
       <toRun name="Tomcat 11.0.141" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" />
@@ -132,6 +136,14 @@
     <configuration name="JavaBackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="java_backend" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.dsmt.java_backend.JavaBackendApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SpringBootStart" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="java_backend" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.dsmt.java_backend.JavaBackendApplication" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/java_backend" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -226,6 +238,7 @@
     </configuration>
     <list>
       <item itemvalue="Compound.RunApp" />
+      <item itemvalue="Spring Boot.SpringBootStart" />
       <item itemvalue="Spring Boot.JavaBackendApplication" />
       <item itemvalue="Tomcat Server.Tomcat 11.0.141" />
     </list>
@@ -253,7 +266,7 @@
       <workItem from="1764751427081" duration="759000" />
       <workItem from="1764796985680" duration="70000" />
       <workItem from="1764797102301" duration="2901000" />
-      <workItem from="1764857489046" duration="2320000" />
+      <workItem from="1764857489046" duration="5748000" />
     </task>
     <task id="LOCAL-00001" summary="aggiunto le funzionalità di base per la registrazione e login lato backend">
       <option name="closed" value="true" />
