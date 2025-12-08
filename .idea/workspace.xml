@@ -9,13 +9,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="93be9511-f638-459c-8ac6-7cf3751c376c" name="Changes" comment="aggiunto le funzionalità di base per la registrazione e login lato backend">
-      <change afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/controller/EventController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/Event.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/repository/EventRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/EventService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/java_backend/src/main/java/dto/EventRequest.java" afterDir="false" />
+    <list default="true" id="93be9511-f638-459c-8ac6-7cf3751c376c" name="Changes" comment="aggiunta la addEvent. Funziona ma da capire meglio cosa inviare.&#10;Nella Event.java ho aggiunto il campo Set&lt;User&gt; partecipanti (?). Da capire se effettivamente c'è da usare quello o EventRequest">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/controller/EventController.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/controller/EventController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/repository/EventRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/repository/EventRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/EventService.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/EventService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -309,7 +307,7 @@
       <workItem from="1764716947856" duration="1327000" />
       <workItem from="1764751427081" duration="759000" />
       <workItem from="1765012120580" duration="12076000" />
-      <workItem from="1765031810274" duration="2197000" />
+      <workItem from="1765031810274" duration="11640000" />
     </task>
     <task id="LOCAL-00001" summary="aggiunto le funzionalità di base per la registrazione e login lato backend">
       <option name="closed" value="true" />
@@ -319,7 +317,23 @@
       <option name="project" value="LOCAL" />
       <updated>1764751779085</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="aggiunta la addEvent. Funziona ma da capire meglio cosa inviare.&#10;Nella Event.java ho aggiunto il campo Set&lt;User&gt; partecipanti (?). Da capire se effettivamente c'è da usare quello o EventRequest">
+      <option name="closed" value="true" />
+      <created>1765034183799</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1765034183799</updated>
+    </task>
+    <task id="LOCAL-00003" summary="aggiunta la addEvent. Funziona ma da capire meglio cosa inviare.&#10;Nella Event.java ho aggiunto il campo Set&lt;User&gt; partecipanti (?). Da capire se effettivamente c'è da usare quello o EventRequest">
+      <option name="closed" value="true" />
+      <created>1765034322275</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1765034322275</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -327,7 +341,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="aggiunto le funzionalità di base per la registrazione e login lato backend" />
-    <option name="LAST_COMMIT_MESSAGE" value="aggiunto le funzionalità di base per la registrazione e login lato backend" />
+    <MESSAGE value="aggiunta la addEvent. Funziona ma da capire meglio cosa inviare.&#10;Nella Event.java ho aggiunto il campo Set&lt;User&gt; partecipanti (?). Da capire se effettivamente c'è da usare quello o EventRequest" />
+    <option name="LAST_COMMIT_MESSAGE" value="aggiunta la addEvent. Funziona ma da capire meglio cosa inviare.&#10;Nella Event.java ho aggiunto il campo Set&lt;User&gt; partecipanti (?). Da capire se effettivamente c'è da usare quello o EventRequest" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
