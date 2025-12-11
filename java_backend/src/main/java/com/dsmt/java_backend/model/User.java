@@ -16,4 +16,5 @@ public class User {
     private String psw;
     private String nome;
     private String cognome;
+
 }

@@ -4,6 +4,7 @@ import com.dsmt.java_backend.model.User;
 import com.dsmt.java_backend.service.UserService;
 import com.dsmt.java_backend.service.EventService;
 import dto.EventRequest;
+import dto.EventResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,36 +20,34 @@ import java.util.Optional;
 public class EventController {
     private final EventService eventService;
     @PostMapping("/addEvent")
-    public Event createEvent(@RequestBody Event newEvent) {
-        //User creatore = userRepository.findById().orElseThrow(() ->new RuntimeException("Creatore non trovato");
-
+    public Event createEvent(@RequestBody EventRequest newEvent) {
         return eventService.addEvent(newEvent);
     }
     @GetMapping("getAllEvents")
-    public List<Event> getAllEvents() {
+    public List<EventResponse> getAllEvents() {
         return eventService.getAllEvents();
     }
+
     @GetMapping("getEventById")
-    public ResponseEntity<Event> getEventById(@RequestParam long id) {
+    public ResponseEntity<EventResponse> getEventById(@RequestParam long id) {
         return eventService.getEventById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
-
     }
     @GetMapping("getAllPublicEvents")
-    public List<Event> getAllPublicEvents(){
+    public List<EventResponse> getAllPublicEvents(){
         return eventService.getAllPublicEvents();
     }
     @GetMapping("getAllFuturePublicEvents")
-    public List<Event> getAllFuturePublicEvents(){
+    public List<EventResponse> getAllFuturePublicEvents(){
         return eventService.getAllFuturePublicEvents();
     }
     @GetMapping("getAllMyPrivateEvents")
-    public List<Event> getAllMyPrivateEvents(@RequestParam Long user_id){
+    public List<EventResponse> getAllMyPrivateEvents(@RequestParam Long user_id){
         return eventService.getAllMyPrivateEvents(user_id);
     }
     @GetMapping("getAllMyPrivateFutureEvents")
-    public List<Event> getAllMyPrivateFutureEvents(@RequestParam Long user_id){
+    public List<EventResponse> getAllMyPrivateFutureEvents(@RequestParam Long user_id){
         return eventService.getAllMyPrivateFutureEvents(user_id);
     }
 }

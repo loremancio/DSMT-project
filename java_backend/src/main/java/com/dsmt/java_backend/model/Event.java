@@ -23,6 +23,7 @@ public class Event {
     @ManyToOne
     @JoinColumn(name = "creatore_id", nullable = false)
     private User creatore;
+    //correggere mettere la email
 
     // Altri attributi diretti della tabella 'event'
     @Column(name = "privato")
@@ -39,6 +40,7 @@ public class Event {
 
 
     private Set<User> partecipanti = new HashSet<>();
+    //correggere Set <String> email_partecipanti
 
     @Column(name = "descrizione")
     private String descrizione;
