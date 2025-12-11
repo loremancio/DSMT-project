@@ -9,14 +9,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="93be9511-f638-459c-8ac6-7cf3751c376c" name="Changes" comment="aggiunte le api per le ricezione di:1.TUtti gli eventi 2. Tutti gli eventi pubblici 3.tutti gli eventi pubblici futuri 4.Tutti gli eventi privati di un user_id 5.Tutti gli eventi privati futuri di un user_id">
-      <change afterPath="$PROJECT_DIR$/java_backend/src/main/java/dto/EventResponse.java" afterDir="false" />
+    <list default="true" id="93be9511-f638-459c-8ac6-7cf3751c376c" name="Changes" comment="convertite le api in modo da inviare e ricevere dto">
+      <change afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/controller/VincoloController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/Vincolo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/repository/VincoloRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/VincoloService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/java_backend/src/main/java/dto/VincoloRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/controller/EventController.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/controller/EventController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/Event.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/Event.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/EventService.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/EventService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/dto/EventRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/dto/EventRequest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -314,7 +313,7 @@
       <workItem from="1765288880385" duration="2403000" />
       <workItem from="1765362955725" duration="7000" />
       <workItem from="1765386944144" duration="91000" />
-      <workItem from="1765444118762" duration="4781000" />
+      <workItem from="1765444118762" duration="7758000" />
     </task>
     <task id="LOCAL-00001" summary="aggiunto le funzionalità di base per la registrazione e login lato backend">
       <option name="closed" value="true" />
@@ -348,7 +347,15 @@
       <option name="project" value="LOCAL" />
       <updated>1765192861987</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="convertite le api in modo da inviare e ricevere dto">
+      <option name="closed" value="true" />
+      <created>1765449178408</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1765449178408</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -358,7 +365,8 @@
     <MESSAGE value="aggiunto le funzionalità di base per la registrazione e login lato backend" />
     <MESSAGE value="aggiunta la addEvent. Funziona ma da capire meglio cosa inviare.&#10;Nella Event.java ho aggiunto il campo Set&lt;User&gt; partecipanti (?). Da capire se effettivamente c'è da usare quello o EventRequest" />
     <MESSAGE value="aggiunte le api per le ricezione di:1.TUtti gli eventi 2. Tutti gli eventi pubblici 3.tutti gli eventi pubblici futuri 4.Tutti gli eventi privati di un user_id 5.Tutti gli eventi privati futuri di un user_id" />
-    <option name="LAST_COMMIT_MESSAGE" value="aggiunte le api per le ricezione di:1.TUtti gli eventi 2. Tutti gli eventi pubblici 3.tutti gli eventi pubblici futuri 4.Tutti gli eventi privati di un user_id 5.Tutti gli eventi privati futuri di un user_id" />
+    <MESSAGE value="convertite le api in modo da inviare e ricevere dto" />
+    <option name="LAST_COMMIT_MESSAGE" value="convertite le api in modo da inviare e ricevere dto" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
