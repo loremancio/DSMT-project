@@ -38,6 +38,8 @@ public class EventService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         newEvent.setCreatore(CreatoreTrovato);
 
+        newEvent.getPartecipanti().add(CreatoreTrovato);
+
         // gestione partecipanti da List<String> a Set<User>
         if(dto.getMail_partecipanti() != null)
             for(String mail: dto.getMail_partecipanti())
@@ -50,6 +52,7 @@ public class EventService {
 
         return eventRepository.save(newEvent);
     }
+
     private List<EventResponse> conversione(List<Event> e){
         List<EventResponse> listaRisposte = new ArrayList<>();
         for (Event event : e) {

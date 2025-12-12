@@ -82,6 +82,12 @@
             <artifactId>jakarta.servlet.jsp.jstl</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.ericsson.otp</groupId>
+            <artifactId>jinterface</artifactId>
+            <version>1.14.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>

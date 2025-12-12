@@ -19,9 +19,9 @@ public interface EventRepository extends JpaRepository<Event, Long> {
         WHERE p.id = :userId: ...dove tra i partecipanti c'è l'utente con questo ID.
         AND e.isPrivato = true: ...e l'evento è privato.
     */
-    @Query("SELECT e FROM Event e  join e.partecipanti ep where ep.id = :myID and e.isPrivato = true")
+    @Query("SELECT e FROM Event e join e.partecipanti ep where ep.id = :myID and e.isPrivato = true")
     List <Event> getAllMyPrivateEvents(@Param("myID")Long myID);
 
-    @Query("SELECT e FROM Event e  join e.partecipanti ep where ep.id = :myID and e.isPrivato = true and e.deadline >=:adesso")
+    @Query("SELECT e FROM Event e join e.partecipanti ep where ep.id = :myID and e.isPrivato = true and e.deadline >=:adesso")
     List <Event> getAllMyPrivateFutureEvents(@Param("adesso") LocalDateTime adesso, @Param("myID")Long myID);
 }
