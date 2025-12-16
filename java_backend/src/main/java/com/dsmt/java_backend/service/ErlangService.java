@@ -30,7 +30,8 @@ public class ErlangService {
                     new OtpErlangLong(v.getBudgetMin() != null ? v.getBudgetMin() : 0),
                     new OtpErlangLong(v.getBudgetMax() != null ? v.getBudgetMax() : 0),
 
-                    new OtpErlangString(v.getTipoLuogo() != null ? v.getTipoLuogo() : "Any")
+                    new OtpErlangString(v.getTipoLuogo() != null ? v.getTipoLuogo() : "Any"),
+                    new OtpErlangString(v.getPosizione() != null ? v.getPosizione() : "Any")
             };
 
             OtpErlangTuple msg = new OtpErlangTuple(payload);
