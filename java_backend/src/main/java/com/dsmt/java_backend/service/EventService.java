@@ -106,7 +106,7 @@ public class EventService {
         return listaRisposte;
     }
 
-    public Optional<EventResponse> getEventById(long id) {
+    public Optional<EventResponse> getEventById(Integer id) {
          /*Visto che il tuo metodo restituisce già un Optional<EventResponse>
           possiamo usare la funzione .map(). È molto elegante:
           trasforma l'oggetto dentro l'Optional solo se esiste; se non esiste,
@@ -125,10 +125,10 @@ public class EventService {
 
         return conversione(eventRepository.findEventiPubbliciFuturi(LocalDateTime.now()));
     }
-    public List<EventResponse> getAllMyPrivateEvents(Long user_id){
+    public List<EventResponse> getAllMyPrivateEvents(Integer user_id){
         return conversione(eventRepository.getAllMyPrivateEvents(user_id));
     }
-    public List<EventResponse> getAllMyPrivateFutureEvents(Long user_id){
+    public List<EventResponse> getAllMyPrivateFutureEvents(Integer user_id){
         return conversione(eventRepository.getAllMyPrivateFutureEvents(LocalDateTime.now(), user_id));
     }
 }

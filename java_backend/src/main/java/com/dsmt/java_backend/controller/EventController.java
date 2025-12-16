@@ -34,12 +34,12 @@ public class EventController {
 
     @GetMapping("/view")
     public String viewEvents(@RequestParam(defaultValue = "all") String type,
-                             @RequestParam(required = false) Long id,
+                             @RequestParam(required = false) Integer id,
                              Model model, HttpSession session) {
 
         if (session.getAttribute("user") == null) return "redirect:/login";
 
-        Long user_id = (Long) session.getAttribute("id");
+        Integer user_id = (Integer) session.getAttribute("id");
         List<EventResponse> risultati = Collections.emptyList();
         String messaggio = "";
 

@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 public class VincoloRequest {
 
     private String emailUtente;
-    private Long idEvento;
+    private Integer idEvento;
 
     // Nuovi tipi semplificati
     private Float oraInizio;

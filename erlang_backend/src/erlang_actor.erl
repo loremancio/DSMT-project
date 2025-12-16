@@ -19,9 +19,9 @@ loop() ->
       io:format("Orario: ~p - ~p~n", [OraInizio, OraFine]),
       io:format("Budget: ~p - ~p~n", [BudMin, BudMax]),
       io:format("Luogo:  ~p ~p~n", [Luogo, Posizione]),
-      loop();
+      erlang_actor:loop();
 
     Other ->
       io:format("Messaggio sconosciuto: ~p~n", [Other]),
-      loop()
+      erlang_actor:loop()
   end.

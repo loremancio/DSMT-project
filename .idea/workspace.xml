@@ -12,16 +12,16 @@
     <list default="true" id="93be9511-f638-459c-8ac6-7cf3751c376c" name="Changes" comment="convertite le api in modo da inviare e ricevere dto">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/erlang_backend/src/erlang_actor.erl" beforeDir="false" afterPath="$PROJECT_DIR$/erlang_backend/src/erlang_actor.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/DatabaseInitializer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/Message.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/MessageController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/MessageRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/ServletInitializer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/Event.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/Event.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/Vincolo.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/Vincolo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/repository/EventRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/repository/EventRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/repository/VincoloRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/repository/VincoloRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/ErlangService.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/ErlangService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/script_db/aggiunta_chiave_est_vincoli.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/script_db/creazione_event.sql" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/script_db/creazione_event.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/script_db/creazione_user.sql" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/script_db/creazione_user.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/script_db/modifica_tipo_vincoli.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/EventService.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/EventService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/dto/EventResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/dto/EventResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/dto/VincoloRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/dto/VincoloRequest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -331,7 +331,7 @@
       <workItem from="1765494055407" duration="4129000" />
       <workItem from="1765556839244" duration="19000" />
       <workItem from="1765559193050" duration="712000" />
-      <workItem from="1765879901052" duration="4466000" />
+      <workItem from="1765879901052" duration="5225000" />
     </task>
     <task id="LOCAL-00001" summary="aggiunto le funzionalità di base per la registrazione e login lato backend">
       <option name="closed" value="true" />

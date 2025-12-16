@@ -15,7 +15,7 @@ public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     // --- Relazione con la chiave esterna (creatore_id) ---
     // Mappa la colonna 'creatore_id' del DB all'oggetto User nel Model

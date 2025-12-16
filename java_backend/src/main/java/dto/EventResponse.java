@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor // Genera un costruttore vuoto (fondamentale per Spring/Jackson)
 @AllArgsConstructor
 public class EventResponse {
-    private Long id;
+    private Integer id;
     private String nome;
     private String descrizione;
     private LocalDateTime deadline;
