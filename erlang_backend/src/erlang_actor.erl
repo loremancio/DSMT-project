@@ -7,7 +7,7 @@
 start() ->
   %% Assicuriamoci che il DB sia pronto
   db_manager:init(),
-  %% Popoliamo con dati di prova se vuoto (Opzionale, per test)
+  %% Popoliamo con dati di prova se vuoto
   db_manager:add_locale(1, "Golden Pub", "Pub", 15.0, {18, 24}),
   db_manager:add_locale(2, "Pizza Express", "Ristorante", 25.0, {19, 23}),
 
@@ -27,13 +27,13 @@ loop(State) ->
       io:format("Evento: ~p | Utente: ~p | Orario: ~p - ~p | Budget: ~p - ~p | TipoPref: ~p~n",
         [IdEvento, Email, OraInizio, OraFine, BudMin, BudMax, TipoPreferito]),
 
-      %% 1. Incrementiamo il contatore globale utenti [cite: 24]
+      %% 1. Incrementiamo il contatore globale utenti
       NewTotalUsers = State#state.total_users + 1,
 
       %% 2. Recuperiamo tutti i locali gestiti da questo nodo
       Locali = db_manager:get_locali(),
 
-      %% 3. Ciclo su ogni locale per calcolo incrementale [cite: 13-30]
+      %% 3. Ciclo su ogni locale per calcolo incrementale
       lists:foreach(fun(L) -> processa_locale(L, {OraInizio, OraFine, BudMin, BudMax, TipoPreferito}, NewTotalUsers) end, Locali),
 
       loop(State#state{total_users = NewTotalUsers});
@@ -47,7 +47,7 @@ processa_locale(Locale, {U_Start, U_End, BMin, BMax, TipoPref}, TotUsers) ->
   %% Estrazione dati locale
   {locale, L_Id, _Nome, L_Tipo, L_Prezzo, L_Apertura, L_Chiusura} = Locale,
 
-  %% A. Calcolo Pqualità specifico per questo utente [cite: 17]
+  %% A. Calcolo Pqualità specifico per questo utente
   QualitaUtente = utils:calcola_qualita_utente(L_Tipo, L_Prezzo, TipoPref, BMin, BMax),
   io:format("Locale ~p -> QualitaUtente calcolata: ~.2f~n", [L_Id, QualitaUtente]),
 
@@ -55,10 +55,10 @@ processa_locale(Locale, {U_Start, U_End, BMin, BMax, TipoPref}, TotUsers) ->
   SlotSovrapposti = utils:calcola_slot_sovrapposti(U_Start, U_End, L_Apertura, L_Chiusura),
   io:format("Locale ~p -> Slot Sovrapposti: ~p~n", [L_Id, SlotSovrapposti]),
 
-  %% C. Aggiornamento DB (Mnesia) e recupero nuovi aggregati [cite: 19, 23]
+  %% C. Aggiornamento DB (Mnesia) e recupero nuovi aggregati
   {atomic, {NewAvgQual, MaxSlotCount}} = db_manager:update_stats(L_Id, QualitaUtente, SlotSovrapposti, TotUsers),
 
-  %% D. Calcolo Itot aggiornato [cite: 28]
+  %% D. Calcolo Itot aggiornato
   Itot = utils:calcola_itot(NewAvgQual, MaxSlotCount, TotUsers, L_Id),
   io:format("Locale ~p -> Itot calcolato: ~.4f~n", [L_Id, Itot]),
   
