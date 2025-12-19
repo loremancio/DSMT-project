@@ -1,0 +1,5 @@
+-record(locale, {id, nome, tipo, prezzo_medio, apertura, chiusura}).
+-record(stats_locale, {id_locale, somma_qualita, num_utenti}).
+-record(slot_temporale, {key, count}).
+-record(best_solution, {id_nodo, id_locale, ora_inizio, score}).
+-record(global_state, {key, value}).

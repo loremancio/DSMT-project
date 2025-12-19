@@ -20,9 +20,12 @@ public class ErlangService {
 
             OtpErlangObject[] payload = new OtpErlangObject[]{
                     new OtpErlangAtom("nuovo_vincolo"),
+
                     new OtpErlangInt(v.getId()),
-                    new OtpErlangString(v.getUser().getEmail()),
+
                     new OtpErlangInt(v.getEvent().getId()),
+
+                    new OtpErlangString(v.getUser().getEmail()),
 
                     new OtpErlangDouble(v.getOraInizio() != null ? v.getOraInizio() : 0.0),
                     new OtpErlangDouble(v.getOraFine() != null ? v.getOraFine() : 0.0),
