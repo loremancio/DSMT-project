@@ -10,12 +10,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="93be9511-f638-459c-8ac6-7cf3751c376c" name="Changes" comment="convertite le api in modo da inviare e ricevere dto">
-      <change afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/controller/VincoloController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/Vincolo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/repository/VincoloRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/VincoloService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/java_backend/src/main/java/dto/VincoloRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/erlang_backend/src/erlang_actor.erl" beforeDir="false" afterPath="$PROJECT_DIR$/erlang_backend/src/erlang_actor.erl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/Event.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/Event.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/Vincolo.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/Vincolo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/repository/EventRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/repository/EventRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/repository/VincoloRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/repository/VincoloRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/ErlangService.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/ErlangService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/EventService.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/EventService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/dto/EventResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/dto/EventResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/dto/VincoloRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/dto/VincoloRequest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,6 +34,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Erlang Module" />
         <option value="Class" />
       </list>
     </option>
@@ -49,7 +56,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/loremancio/DSMT-project.git&quot;,
-    &quot;accountId&quot;: &quot;ad4b39e6-272b-42e8-87a4-136d8ccd164d&quot;
+    &quot;accountId&quot;: &quot;5c6e9c3d-d443-4564-9679-06b04fe43bf9&quot;
   }
 }</component>
   <component name="LogFilters">
@@ -92,7 +99,7 @@
     &quot;Spring Boot.JavaBackendApplication.executor&quot;: &quot;Run&quot;,
     &quot;Tomcat Server.Tomcat 11.0.141.executor&quot;: &quot;Run&quot;,
     &quot;Tomcat Server.test.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Matteo&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;lore&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/loren/Documents/GitHub/DSMT-project&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -111,6 +118,7 @@
     <configuration name="JavaBackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="java_backend" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.dsmt.java_backend.JavaBackendApplication" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/java_backend" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -290,8 +298,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.28238.7" />
-        <option value="bundled-js-predefined-d6986cc7102b-a71380e98a7c-JavaScript-IU-252.28238.7" />
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.27397.103" />
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-IU-252.27397.103" />
       </set>
     </attachedChunks>
   </component>
@@ -314,6 +322,16 @@
       <workItem from="1765362955725" duration="7000" />
       <workItem from="1765386944144" duration="91000" />
       <workItem from="1765444118762" duration="7758000" />
+      <workItem from="1765465722914" duration="3297000" />
+      <workItem from="1765471527277" duration="523000" />
+      <workItem from="1765472081312" duration="1669000" />
+      <workItem from="1765489829178" duration="1053000" />
+      <workItem from="1765490934445" duration="2929000" />
+      <workItem from="1765493943523" duration="107000" />
+      <workItem from="1765494055407" duration="4129000" />
+      <workItem from="1765556839244" duration="19000" />
+      <workItem from="1765559193050" duration="712000" />
+      <workItem from="1765879901052" duration="5225000" />
     </task>
     <task id="LOCAL-00001" summary="aggiunto le funzionalità di base per la registrazione e login lato backend">
       <option name="closed" value="true" />

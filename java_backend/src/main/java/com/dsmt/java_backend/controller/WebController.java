@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@Controller // Importante: Questo gestisce le pagine HTML/JSP
+@Controller
 @RequiredArgsConstructor
 public class WebController {
 
@@ -58,6 +58,7 @@ public class WebController {
             session.setAttribute("user", user.getEmail());
             session.setAttribute("nome", user.getNome());
             session.setAttribute("cognome", user.getCognome());
+            session.setAttribute("id", user.getId());
 
             return "redirect:/"; // Vai alla home
         } catch (IllegalStateException e) {

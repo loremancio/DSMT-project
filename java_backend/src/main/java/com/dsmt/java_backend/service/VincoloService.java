@@ -1,4 +1,4 @@
-package com.dsmt.java_backend.service; // O il tuo package service
+package com.dsmt.java_backend.service;
 
 import com.dsmt.java_backend.model.Event;
 import com.dsmt.java_backend.model.User;
@@ -9,6 +9,8 @@ import com.dsmt.java_backend.repository.VincoloRepository;
 import dto.VincoloRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional; // Importante!
+import com.dsmt.java_backend.service.ErlangService;
 
 @Service
 public class VincoloService {
@@ -17,27 +19,32 @@ public class VincoloService {
     private VincoloRepository vincoloRepository;
 
     @Autowired
-    private EventRepository eventRepository; // Ci serve per controllare se l'evento esiste
+    private EventRepository eventRepository;
 
     @Autowired
-    private UserRepository userRepository;   // Ci serve per controllare l'utente
+    private UserRepository userRepository;
 
+    @Autowired
+    private ErlangService erlangService;
+
+    @Transactional
     public Vincolo aggiungiVincolo(VincoloRequest dto) {
 
-        // 1. Recupera Evento
         Event evento = eventRepository.findById(dto.getIdEvento())
                 .orElseThrow(() -> new RuntimeException("Evento non trovato con ID: " + dto.getIdEvento()));
 
-        // 2. Recupera Utente
         User utente = userRepository.findByEmail(dto.getEmailUtente())
                 .orElseThrow(() -> new RuntimeException("Utente non trovato con email: " + dto.getEmailUtente()));
 
-        // 3. Logica di Business: Controllo Partecipazione
-        if (!evento.getPartecipanti().contains(utente)) {
-            throw new RuntimeException("L'utente non è tra i partecipanti dell'evento.");
+        boolean isCreatore = evento.getCreatore().getId().equals(utente.getId());
+
+        boolean isPartecipante = evento.getPartecipanti().stream()
+                .anyMatch(p -> p.getId().equals(utente.getId()));
+
+        if (!isCreatore && !isPartecipante) {
+            throw new RuntimeException("Non hai i permessi: devi essere il creatore o un partecipante per aggiungere vincoli.");
         }
 
-        // 4. Mappatura DTO -> Entity
         Vincolo nuovoVincolo = new Vincolo();
         nuovoVincolo.setEvent(evento);
         nuovoVincolo.setUser(utente);
@@ -49,7 +56,10 @@ public class VincoloService {
         nuovoVincolo.setBudgetMin(dto.getBudgetMin());
         nuovoVincolo.setBudgetMax(dto.getBudgetMax());
 
-        // 5. Salva
-        return vincoloRepository.save(nuovoVincolo);
+        Vincolo vincoloSalvato = vincoloRepository.save(nuovoVincolo);
+
+        erlangService.sendVincolo(vincoloSalvato);
+
+        return vincoloSalvato;
     }
 }

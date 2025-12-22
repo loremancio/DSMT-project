@@ -1,53 +1,81 @@
 package com.dsmt.java_backend.controller;
-import com.dsmt.java_backend.model.Event;
-import com.dsmt.java_backend.model.User;
-import com.dsmt.java_backend.service.UserService;
+
 import com.dsmt.java_backend.service.EventService;
 import dto.EventRequest;
 import dto.EventResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
-@RestController
-@RequestMapping("/api")
+@Controller
+@RequestMapping("/events")
 @RequiredArgsConstructor
 public class EventController {
+
     private final EventService eventService;
-    @PostMapping("/addEvent")
-    public Event createEvent(@RequestBody EventRequest newEvent) {
-        return eventService.addEvent(newEvent);
-    }
-    @GetMapping("getAllEvents")
-    public List<EventResponse> getAllEvents() {
-        return eventService.getAllEvents();
+
+    @PostMapping("/add")
+    public String createEvent(@ModelAttribute EventRequest eventRequest, HttpSession session) {
+        String emailUser = (String) session.getAttribute("user");
+        if (emailUser == null) return "redirect:/login";
+
+        eventRequest.setEmail_creatore(emailUser);
+
+        eventService.addEvent(eventRequest);
+
+        return "redirect:/";
     }
 
-    @GetMapping("getEventById")
-    public ResponseEntity<EventResponse> getEventById(@RequestParam long id) {
-        return eventService.getEventById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-    @GetMapping("getAllPublicEvents")
-    public List<EventResponse> getAllPublicEvents(){
-        return eventService.getAllPublicEvents();
-    }
-    @GetMapping("getAllFuturePublicEvents")
-    public List<EventResponse> getAllFuturePublicEvents(){
-        return eventService.getAllFuturePublicEvents();
-    }
-    @GetMapping("getAllMyPrivateEvents")
-    public List<EventResponse> getAllMyPrivateEvents(@RequestParam Long user_id){
-        return eventService.getAllMyPrivateEvents(user_id);
-    }
-    @GetMapping("getAllMyPrivateFutureEvents")
-    public List<EventResponse> getAllMyPrivateFutureEvents(@RequestParam Long user_id){
-        return eventService.getAllMyPrivateFutureEvents(user_id);
+    @GetMapping("/view")
+    public String viewEvents(@RequestParam(defaultValue = "all") String type,
+                             @RequestParam(required = false) Integer id,
+                             Model model, HttpSession session) {
+
+        if (session.getAttribute("user") == null) return "redirect:/login";
+
+        Integer user_id = (Integer) session.getAttribute("id");
+        List<EventResponse> risultati = Collections.emptyList();
+        String messaggio = "";
+
+        switch (type) {
+            case "all":
+                risultati = eventService.getAllEvents();
+                messaggio = "Tutti gli Eventi";
+                break;
+            case "public":
+                risultati = eventService.getAllPublicEvents();
+                messaggio = "Eventi Pubblici";
+                break;
+            case "future":
+                risultati = eventService.getAllFuturePublicEvents();
+                messaggio = "Eventi Pubblici Futuri";
+                break;
+            case "byId":
+                if (id != null) {
+                    risultati = eventService.getEventById(id).map(List::of).orElse(Collections.emptyList());
+                    messaggio = "Ricerca per ID: " + id;
+                }
+                break;
+            case "myPrivate":
+                risultati = eventService.getAllMyPrivateEvents(user_id);
+                messaggio = "I Miei Eventi Privati (Partecipante)";
+                break;
+
+            case "myFuturePrivate":
+                risultati = eventService.getAllMyPrivateFutureEvents(user_id);
+                messaggio = "Miei Eventi Privati Futuri";
+                break;
+        }
+
+        model.addAttribute("listaEventi", risultati);
+        model.addAttribute("titoloTabella", messaggio);
+
+        return "index";
     }
 }

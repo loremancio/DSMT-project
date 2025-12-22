@@ -38,6 +38,8 @@ public class EventService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         newEvent.setCreatore(CreatoreTrovato);
 
+        newEvent.getPartecipanti().add(CreatoreTrovato);
+
         // gestione partecipanti da List<String> a Set<User>
         if(dto.getMail_partecipanti() != null)
             for(String mail: dto.getMail_partecipanti())
@@ -50,6 +52,7 @@ public class EventService {
 
         return eventRepository.save(newEvent);
     }
+
     private List<EventResponse> conversione(List<Event> e){
         List<EventResponse> listaRisposte = new ArrayList<>();
         for (Event event : e) {
@@ -103,7 +106,7 @@ public class EventService {
         return listaRisposte;
     }
 
-    public Optional<EventResponse> getEventById(long id) {
+    public Optional<EventResponse> getEventById(Integer id) {
          /*Visto che il tuo metodo restituisce già un Optional<EventResponse>
           possiamo usare la funzione .map(). È molto elegante:
           trasforma l'oggetto dentro l'Optional solo se esiste; se non esiste,
@@ -122,10 +125,10 @@ public class EventService {
 
         return conversione(eventRepository.findEventiPubbliciFuturi(LocalDateTime.now()));
     }
-    public List<EventResponse> getAllMyPrivateEvents(Long user_id){
+    public List<EventResponse> getAllMyPrivateEvents(Integer user_id){
         return conversione(eventRepository.getAllMyPrivateEvents(user_id));
     }
-    public List<EventResponse> getAllMyPrivateFutureEvents(Long user_id){
+    public List<EventResponse> getAllMyPrivateFutureEvents(Integer user_id){
         return conversione(eventRepository.getAllMyPrivateFutureEvents(LocalDateTime.now(), user_id));
     }
 }
