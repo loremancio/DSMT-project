@@ -5,19 +5,17 @@
 -include("shared.hrl").
 
 start() ->
-  %% Assicuriamoci che il DB sia pronto
   db_manager:init(),
-  %% Popoliamo con dati di prova se vuoto
   db_manager:add_locale(1, "Golden Pub", "Pub", 15.0, {18, 24}),
   db_manager:add_locale(2, "Pizza Express", "Ristorante", 25.0, {19, 23}),
 
-  io:format(">> Locali di prova aggiunti al DB.~n"),
-  io:format(">> Locali presenti: ~p~n", [db_manager:get_locali()]),
+  io:format(">> Attore Remoto pronto su ~p.~n", [node()]),
 
-  Pid = spawn_link(?MODULE, loop, [#state{}]),
-  register(vincolo_service, Pid),
-  io:format(">> Attore Vincoli avviato con logica di calcolo.~n"),
-  {ok, Pid}.
+  %% IMPORTANTE: Registriamo il nome qui internamente
+  register(vincolo_service, self()),
+
+  %% Entriamo direttamente nel loop, non facciamo un altro spawn!
+  loop(#state{total_users = 0}).
 
 loop(State) ->
   receive
@@ -39,6 +37,25 @@ loop(State) ->
       loop(State#state{total_users = NewTotalUsers});
 
     {calcola_ottimo_globale, Id,Pid_coordinatore} ->
+      1+1;
+    {richiedi_parziale, Pid_coordinatore} ->
+      io:format(">> Worker: Ricevuta richiesta da ~p~n", [Pid_coordinatore]),
+      %% 1. Leggiamo l'ottimo da Mnesia
+      {atomic, Res} = mnesia:transaction(fun() ->
+                                        mnesia:read(best_solution, node())
+                                                                         end),
+
+      %% 2. Prepariamo la risposta
+      Risposta = case Res of
+                   [Best] -> Best; %% Invia il record completo
+                   []     -> empty
+                 end,
+
+      %% 3. INVIO AL COORDINATORE (Questo è il pezzo mancante!)
+      Pid_coordinatore ! {risposta_parziale, Risposta},
+
+      loop(State);
+
 
 
     Other ->

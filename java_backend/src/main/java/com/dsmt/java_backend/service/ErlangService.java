@@ -8,14 +8,22 @@ import java.io.IOException;
 @Service
 public class ErlangService {
 
-    private static final String REMOTE_NODE_NAME = "server_node@LAPTOP-12PQ5VNM";
+    private static final String REMOTE_NODE_NAME = "coordinator_node@127.0.0.1";
     private static final String COOKIE = "secret123";
-    private static final String MAILBOX = "vincolo_service";
+    private static final String MAILBOX = "coordinator_service";
     private OtpNode javaNode = null;
+    private OtpMbox mbox;
 
     public ErlangService() throws IOException {
         // Creiamo il nodo una sola volta all'avvio del servizio
-        this.javaNode = new OtpNode("java_backend_node", COOKIE);
+        this.javaNode = new OtpNode("java_backend_node@127.0.0.1", COOKIE);
+        mbox = javaNode.createMbox("java_mailbox");
+
+        // AVVIO DEL THREAD IN BACKGROUND
+        ErlangReceiver receiver = new ErlangReceiver(mbox);
+        Thread t = new Thread(receiver);
+        t.setDaemon(true); // Il thread si chiude se l'app principale si ferma
+        t.start();
     }
 
     public void sendVincolo(Vincolo v) {
@@ -57,6 +65,7 @@ public class ErlangService {
         }
     }
     public void triggerGlobalOptimum(Integer eventId) {
+        System.out.println("Vincolo triggerGlobalOptimum");
 
         try {
 
