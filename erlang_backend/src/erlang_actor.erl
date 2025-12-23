@@ -38,6 +38,9 @@ loop(State) ->
 
       loop(State#state{total_users = NewTotalUsers});
 
+    {calcola_ottimo_globale, Id,Pid_coordinatore} ->
+
+
     Other ->
       io:format("Messaggio sconosciuto: ~p~n", [Other]),
       loop(State)

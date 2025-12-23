@@ -39,10 +39,7 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
+
 
         <!-- Tomcat per WAR deployment -->
         <dependency>
@@ -85,7 +82,9 @@
         <dependency>
             <groupId>com.ericsson.otp</groupId>
             <artifactId>jinterface</artifactId>
-            <version>1.14.0</version>
+            <version>1.14.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/OtpErlang-otp27-java21-1.14.1.jar</systemPath>
         </dependency>
 
     </dependencies>

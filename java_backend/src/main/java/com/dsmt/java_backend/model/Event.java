@@ -3,6 +3,7 @@ package com.dsmt.java_backend.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
@@ -47,6 +48,8 @@ public class Event {
 
     @Column(name = "deadline")
     private LocalDateTime deadline; // Utilizzo LocalDateTime per una colonna data/ora
+
+
 
     // Nota: Non è necessario includere esplicitamente i getter/setter,
     // l'annotazione @Data di Lombok li gestisce automaticamente.

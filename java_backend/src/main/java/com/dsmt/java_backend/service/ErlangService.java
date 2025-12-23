@@ -8,14 +8,20 @@ import java.io.IOException;
 @Service
 public class ErlangService {
 
-    private static final String REMOTE_NODE_NAME = "server_node@PCDelLorenzo";
+    private static final String REMOTE_NODE_NAME = "server_node@LAPTOP-12PQ5VNM";
     private static final String COOKIE = "secret123";
     private static final String MAILBOX = "vincolo_service";
+    private OtpNode javaNode = null;
+
+    public ErlangService() throws IOException {
+        // Creiamo il nodo una sola volta all'avvio del servizio
+        this.javaNode = new OtpNode("java_backend_node", COOKIE);
+    }
 
     public void sendVincolo(Vincolo v) {
-        OtpNode javaNode = null;
+
         try {
-            javaNode = new OtpNode("java_client_vincoli", COOKIE);
+
             OtpMbox mbox = javaNode.createMbox();
 
             OtpErlangObject[] payload = new OtpErlangObject[]{
@@ -46,10 +52,32 @@ public class ErlangService {
                 System.err.println("Erlang non raggiungibile.");
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (javaNode != null) javaNode.close();
         }
     }
+    public void triggerGlobalOptimum(Integer eventId) {
+
+        try {
+
+            OtpMbox mbox = javaNode.createMbox();
+
+            // Prepariamo il messaggio: {calcola_ottimo_globale, EventId}
+            OtpErlangObject[] payload = new OtpErlangObject[]{
+                    new OtpErlangAtom("calcola_ottimo_globale"),
+                    new OtpErlangLong(eventId)
+            };
+            OtpErlangTuple msg = new OtpErlangTuple(payload);
+
+            if (javaNode.ping(REMOTE_NODE_NAME, 2000)) {
+                mbox.send(MAILBOX, REMOTE_NODE_NAME, msg);
+                System.out.println("Richiesta Ottimo Globale inviata per Evento: " + eventId);
+            } else {
+                System.err.println("Nodo Erlang Master non raggiungibile per la deadline.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
