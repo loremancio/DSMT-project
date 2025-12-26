@@ -32,38 +32,36 @@ loop(State) ->
       Locali = db_manager:get_locali(),
 
       %% 3. Ciclo su ogni locale per calcolo incrementale
-      lists:foreach(fun(L) -> processa_locale(L, {OraInizio, OraFine, BudMin, BudMax, TipoPreferito}, NewTotalUsers) end, Locali),
+      lists:foreach(fun(L) -> processa_locale(IdEvento,L, {OraInizio, OraFine, BudMin, BudMax, TipoPreferito}, NewTotalUsers) end, Locali),
 
       loop(State#state{total_users = NewTotalUsers});
 
-    {calcola_ottimo_globale, Id,Pid_coordinatore} ->
-      1+1;
-    {richiedi_parziale, Pid_coordinatore} ->
-      io:format(">> Worker: Ricevuta richiesta da ~p~n", [Pid_coordinatore]),
-      %% 1. Leggiamo l'ottimo da Mnesia
-      {atomic, Res} = mnesia:transaction(fun() ->
-                                        mnesia:read(best_solution, node())
-                                                                         end),
+    {richiedi_parziale, Pid_coordinatore, E_id} ->
+      io:format(">> Worker (~p): Richiesta ottimo per Evento ~p~n", [node(), E_id]),
 
-      %% 2. Prepariamo la risposta
-      Risposta = case Res of
-                   [Best] -> Best; %% Invia il record completo
-                   []     -> empty
+      %% 1. Accediamo a Mnesia usando E_id come chiave
+      {atomic, RisultatoMnesia} = mnesia:transaction(fun() ->
+        mnesia:read(best_solution, E_id)
+           end),
+
+      %% 2. Gestiamo il caso in cui non ci sia ancora un ottimo per quell'evento
+      Risposta = case RisultatoMnesia of
+                   [Record] -> Record;  %% Trovato il record #best_solution
+                   []       -> empty    %% Nessun calcolo ancora effettuato per questo E_id
                  end,
 
-      %% 3. INVIO AL COORDINATORE (Questo è il pezzo mancante!)
-      Pid_coordinatore ! {risposta_parziale, Risposta},
+      %% 3. Spediamo la risposta al coordinatore
+      %% Usiamo lo stesso formato che il coordinatore si aspetta di ricevere
+      Pid_coordinatore ! {risposta_parziale, E_id, Risposta},
 
       loop(State);
 
-
-
-    Other ->
-      io:format("Messaggio sconosciuto: ~p~n", [Other]),
-      loop(State)
+      Other ->
+        io:format("Messaggio sconosciuto: ~p~n", [Other]),
+        loop(State)
   end.
 
-processa_locale(Locale, {U_Start, U_End, BMin, BMax, TipoPref}, TotUsers) ->
+processa_locale(IdEvento, Locale, {U_Start, U_End, BMin, BMax, TipoPref}, TotUsers) ->
   %% Estrazione dati locale
   {locale, L_Id, _Nome, L_Tipo, L_Prezzo, L_Apertura, L_Chiusura} = Locale,
 
@@ -86,11 +84,11 @@ processa_locale(Locale, {U_Start, U_End, BMin, BMax, TipoPref}, TotUsers) ->
     [L_Id, QualitaUtente, NewAvgQual, MaxSlotCount, Itot]),
 
   %% E. Verifica se è la nuova soluzione ottimale
-  check_and_update_best(L_Id, Itot).
+  check_and_update_best(IdEvento,L_Id, Itot).
 
-check_and_update_best(LocaleId, Itot) ->
+check_and_update_best(E_id, LocaleId, Itot) ->
   F = fun() ->
-    CurrentBest = mnesia:read(best_solution, node()),
+    CurrentBest = mnesia:read(best_solution, E_id),
     Update = case CurrentBest of
                [] -> true;
                [#best_solution{score=OldScore}] when Itot > OldScore -> true;
@@ -99,7 +97,11 @@ check_and_update_best(LocaleId, Itot) ->
 
     if Update ->
       io:format(">>> NUOVO RECORD LOCALE! Locale ~p con Score ~.4f~n", [LocaleId, Itot]),
-      mnesia:write(#best_solution{id_nodo=node(), id_locale=LocaleId, ora_inizio=0, score=Itot});
+      mnesia:write(#best_solution{
+                              id_event =E_id,
+                              id_locale=LocaleId,
+                              ora_inizio=0,
+                              score=Itot});
       true -> ok
     end
       end,

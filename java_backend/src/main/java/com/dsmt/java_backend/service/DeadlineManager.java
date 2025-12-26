@@ -25,15 +25,15 @@ public class DeadlineManager {
     private TaskScheduler taskScheduler;
 
     // Ogni giorno alle 00:01 analizza le deadline odierne
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 */2 * * * *")
     public void scheduleTodaysDeadlines() {
         System.out.println("Todays deadlines");
         // Definiamo i confini della giornata odierna
         LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
         LocalDateTime endOfDay = LocalDate.now().atTime(LocalTime.MAX);
-
+        LocalDateTime now = LocalDateTime.now();
         // Usiamo il nuovo metodo del repository
-        List<Event> todayEvents = eventRepository.findByDeadlineBetween(startOfDay, endOfDay);
+        List<Event> todayEvents = eventRepository.findByDeadlineBetween(now, endOfDay);
 
         for (Event event : todayEvents) {
             taskScheduler.schedule(() -> {erlangService.triggerGlobalOptimum(event.getId());},

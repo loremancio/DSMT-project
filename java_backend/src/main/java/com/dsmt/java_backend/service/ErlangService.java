@@ -68,7 +68,6 @@ public class ErlangService {
         System.out.println("Vincolo triggerGlobalOptimum");
 
         try {
-
             OtpMbox mbox = javaNode.createMbox();
 
             // Prepariamo il messaggio: {calcola_ottimo_globale, EventId}
