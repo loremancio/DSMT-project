@@ -96,12 +96,19 @@ check_and_update_best(E_id, LocaleId, Itot) ->
              end,
 
     if Update ->
-      io:format(">>> NUOVO RECORD LOCALE! Locale ~p con Score ~.4f~n", [LocaleId, Itot]),
+      %% 1. RECUPERA IL NOME DEL LOCALE
+      [LocaleRec] = mnesia:read(locale, LocaleId),
+      NomeDelLocale = LocaleRec#locale.nome,
+
+      io:format(">>> NUOVO RECORD LOCALE! Locale ~p (~p) con Score ~.4f~n", [LocaleId, NomeDelLocale, Itot]),
+
+      %% 2. SALVA ANCHE IL NOME
       mnesia:write(#best_solution{
-                              id_event =E_id,
-                              id_locale=LocaleId,
-                              ora_inizio=0,
-                              score=Itot});
+        id_evento = E_id,
+        id_locale = LocaleId,
+        nome_locale = NomeDelLocale, %% <--- CAMPO AGGIUNTO
+        ora_inizio = 0,
+        score = Itot});
       true -> ok
     end
       end,

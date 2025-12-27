@@ -152,6 +152,13 @@
         <td><%= e.getDeadline() %></td>
         <td><%= e.getEmail_creatore() %></td>
         <td><%= e.getIsPrivato() ? "PRIVATO" : "PUBBLICO" %></td>
+
+        <td align="center">
+            <% if (e.getLuogoScelto() != null) { %>
+            <%= e.getLuogoScelto() %>
+            <% } else { %>In corso...
+            <% } %>
+        </td>
     </tr>
     <%     }
     } else { %>

@@ -1,7 +1,10 @@
 package com.dsmt.java_backend.service;
 
 import com.dsmt.java_backend.model.Vincolo;
+import com.dsmt.java_backend.repository.EventRepository;
 import com.ericsson.otp.erlang.*;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 
@@ -14,16 +17,32 @@ public class ErlangService {
     private OtpNode javaNode = null;
     private OtpMbox mbox;
 
-    public ErlangService() throws IOException {
-        // Creiamo il nodo una sola volta all'avvio del servizio
-        this.javaNode = new OtpNode("java_backend_node@127.0.0.1", COOKIE);
-        mbox = javaNode.createMbox("java_mailbox");
+    @Autowired
+    private EventRepository eventRepository; // <--- 1. INIETTA IL REPOSITORY
 
-        // AVVIO DEL THREAD IN BACKGROUND
-        ErlangReceiver receiver = new ErlangReceiver(mbox);
-        Thread t = new Thread(receiver);
-        t.setDaemon(true); // Il thread si chiude se l'app principale si ferma
-        t.start();
+    public ErlangService() throws IOException {
+        
+    }
+
+    @PostConstruct
+    public void init() {
+        try {
+            // Qui eventRepository è PRONTO
+            this.javaNode = new OtpNode("java_backend_node@127.0.0.1", COOKIE);
+            mbox = javaNode.createMbox("java_mailbox");
+
+            System.out.println(">> Nodo Java avviato. Avvio Receiver...");
+
+            // Passiamo il repository (non null) al receiver
+            ErlangReceiver receiver = new ErlangReceiver(mbox, eventRepository);
+
+            Thread t = new Thread(receiver);
+            t.setDaemon(true);
+            t.start();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void sendVincolo(Vincolo v) {

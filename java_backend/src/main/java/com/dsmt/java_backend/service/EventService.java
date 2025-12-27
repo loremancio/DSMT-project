@@ -63,6 +63,7 @@ public class EventService {
             dto.setIsPrivato(event.getIsPrivato());
             dto.setDeadline(event.getDeadline());
             dto.setEmail_creatore(event.getCreatore().getEmail());
+            dto.setLuogoScelto(event.getLuogoScelto());
             List<String> emails = event.getPartecipanti().stream()
                     .map(user -> user.getEmail())
                     .collect(Collectors.toList());
@@ -79,6 +80,7 @@ public class EventService {
         dto.setIsPrivato(event.getIsPrivato());
         dto.setDeadline(event.getDeadline());
         dto.setEmail_creatore(event.getCreatore().getEmail());
+        dto.setLuogoScelto(event.getLuogoScelto());
         List<String> emails = event.getPartecipanti().stream()
                 .map(user -> user.getEmail())
                 .collect(Collectors.toList());
@@ -97,6 +99,7 @@ public class EventService {
             dto.setIsPrivato(event.getIsPrivato());
             dto.setDeadline(event.getDeadline());
             dto.setEmail_creatore(event.getCreatore().getEmail());
+            dto.setLuogoScelto(event.getLuogoScelto());
             List<String> emails = event.getPartecipanti().stream()
                                         .map(user -> user.getEmail())
                                         .collect(Collectors.toList());

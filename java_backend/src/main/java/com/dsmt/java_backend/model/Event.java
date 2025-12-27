@@ -49,7 +49,8 @@ public class Event {
     @Column(name = "deadline")
     private LocalDateTime deadline; // Utilizzo LocalDateTime per una colonna data/ora
 
-
+    @Column(name = "luogo_scelto")
+    private String luogoScelto; // <--- AGGIUNGI QUESTO
 
     // Nota: Non è necessario includere esplicitamente i getter/setter,
     // l'annotazione @Data di Lombok li gestisce automaticamente.
