@@ -7,29 +7,38 @@
 start() ->
   db_manager:init(),
 
-  %% --- 1. CARICAMENTO DIFFERENZIATO PER NODO ---
+  %% --- 1. CARICAMENTO DIFFERENZIATO PER NODO (Configurazione PISA) ---
   NodeName = atom_to_list(node()),
 
-  %% Definiamo i locali per zona
+  %% Definiamo i locali per zona (5 per worker)
   LocaliDaCaricare = case NodeName of
-                       "worker1@" ++ _ -> %% NORD
-                         io:format(">> Loading NORD configuration...~n"),
+                       "worker1@" ++ _ -> %% --- ZONA SANTA MARIA (Zona Torre/Uni) IDs 1-9 ---
                          [
-                           {1, "Golden Pub", "Pub", 15.0, {18, 24}},
-                           {2, "Pizza Nord", "Pizzeria", 20.0, {19, 23}}
+                           {1, "L'Ostellino",        "Pub",        12.0, {11, 24}}, %% Panini famosi
+                           {2, "Pizzeria Il Montino","Pizzeria",   15.0, {19, 23}}, %% Storica
+                           {3, "Rist. Alle Bandierine","Ristorante",35.0, {19, 23}}, %% Spaghetteria
+                           {4, "Filter Coffee Lab",  "Bar",         7.0, {08, 19}}, %% Colazioni moderne
+                           {5, "Auelli",             "Ristorante", 28.0, {12, 15}}  %% Pranzo universitario
                          ];
-                       "worker2@" ++ _ -> %% CENTRO
-                         io:format(">> Loading CENTRO configuration...~n"),
+
+                       "worker2@" ++ _ -> %% --- ZONA BORGO STRETTO (Centro Storico) IDs 10-19 ---
                          [
-                           {3, "Ristorante Roma", "Ristorante", 35.0, {12, 15}},
-                           {4, "Bar Centrale", "Bar", 10.0, {07, 20}}
+                           {10, "Osteria i Santi",   "Ristorante", 32.0, {19, 23}}, %% Turistico ma buono
+                           {11, "Sottobosco Libri",  "Bar",        10.0, {10, 24}}, %% Bar letterario/Jazz
+                           {12, "Pizzeria Le Mura",  "Pizzeria",   18.0, {19, 23}}, %% Cena classica
+                           {13, "Chupiteria",        "Pub",        15.0, {21, 03}}, %% Movida notturna
+                           {14, "Argini e Margini",  "Pub",        14.0, {18, 01}}  %% Estivo sul fiume
                          ];
-                       "worker3@" ++ _ -> %% SUD
-                         io:format(">> Loading SUD configuration...~n"),
+
+                       "worker3@" ++ _ -> %% --- ZONA STAZIONE / CORSO ITALIA IDs 20-29 ---
                          [
-                           {5, "Bella Napoli", "Pizzeria", 18.0, {19, 24}},
-                           {6, "Sud Bar", "Bar", 12.0, {08, 22}}
+                           {20, "Orzo Bruno",        "Pub",        16.0, {18, 02}}, %% Birra artigianale famosa
+                           {21, "Keith Art Cafe",    "Bar",         6.0, {07, 21}}, %% Vicino al Murales
+                           {22, "Pizzeria Da Nando", "Pizzeria",   14.0, {12, 23}}, %% Economico e veloce
+                           {23, "Ristorante La Scaletta","Ristorante", 55.0, {19, 23}}, %% Pesce di alto livello
+                           {24, "Bar La Borsa",      "Bar",         5.0, {06, 20}}  %% Storico per caffè
                          ];
+
                        _ ->
                          io:format(">> Nodo sconosciuto, nessun locale caricato.~n"),
                          []
@@ -41,7 +50,7 @@ start() ->
                 end, LocaliDaCaricare),
   %% ---------------------------------------------
 
-  io:format(">> Attore Remoto pronto su ~p.~n", [node()]),
+  io:format(">> Attore Remoto pronto su ~p con ~p locali.~n", [node(), length(LocaliDaCaricare)]),
   register(vincolo_service, self()),
   loop(#state{total_users = 0}).
 
