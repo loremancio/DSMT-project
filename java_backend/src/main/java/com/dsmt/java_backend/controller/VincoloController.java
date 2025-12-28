@@ -47,11 +47,4 @@ public class VincoloController {
         // Torna alla home in ogni caso
         return "redirect:/";
     }
-
-    @GetMapping("/trigger/{eventId}")
-    public String forceTrigger(@PathVariable Integer eventId) {
-        System.out.println(">> FORZATURA MANUALE TRIGGER per evento " + eventId);
-        erlangService.triggerGlobalOptimum(eventId);
-        return "Trigger forzato inviato per evento " + eventId;
-    }
 }

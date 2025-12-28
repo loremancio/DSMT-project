@@ -53,27 +53,33 @@ public class ErlangReceiver implements Runnable {
                 OtpErlangString nomeLocaleObj = (OtpErlangString) bestRecord.elementAt(3);
                 String nomeLocale = nomeLocaleObj.stringValue();
 
+                OtpErlangObject oraObj = bestRecord.elementAt(4);
+                long oraInizio = (oraObj instanceof OtpErlangLong) ? ((OtpErlangLong) oraObj).longValue() : 0;
+                String orarioFormattato = String.format("%02d:00 - %02d:00", oraInizio, oraInizio + 2);
+
                 OtpErlangDouble scoreObj = (OtpErlangDouble) bestRecord.elementAt(5);
                 double score = scoreObj.doubleValue();
 
-                System.out.println(">>> [VINCITORE]: Evento " + eventId + " vince " + nomeLocale + " con score " + score);
+                System.out.println(">>> [VINCITORE]: Evento " + eventId + " vince " + nomeLocale + " con score " + score + " alle ore " + oraInizio);
 
                 System.out.println(">>> SALVATAGGIO SU DB: " + nomeLocale);
 
                 // --- SALVATAGGIO SU DB ---
-                salvaVincitore(eventId, nomeLocale);
+                salvaVincitore(eventId, nomeLocale, score, orarioFormattato);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void salvaVincitore(Integer eventId, String nome) {
+    private void salvaVincitore(Integer eventId, String nome, double score, String orario) {
         // Nota: eventRepository.findById potrebbe richiedere una transazione o contesto JPA
         // Se hai problemi di sessione, usa TransactionTemplate o @Transactional sul Service chiamante
         try {
             eventRepository.findById(eventId).ifPresent(evento -> {
                 evento.setLuogoScelto(nome);
+                evento.setPunteggioFinale(score);
+                evento.setOrarioScelto(orario);
                 eventRepository.save(evento);
             });
         } catch (Exception e) {

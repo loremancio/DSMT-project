@@ -21,7 +21,7 @@ public class ErlangService {
     private EventRepository eventRepository; // <--- 1. INIETTA IL REPOSITORY
 
     public ErlangService() throws IOException {
-        
+
     }
 
     @PostConstruct

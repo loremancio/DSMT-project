@@ -1,5 +1,5 @@
 -module(db_manager).
--export([init/0, add_locale/5, get_locali/0, update_stats/4, get_best_solution/0]).
+-export([init/0, add_locale/5, get_locali/0, update_stats/4, get_best_hour/1]).
 
 -include("shared.hrl").
 
@@ -56,6 +56,26 @@ get_max_slot_count(LocaleId) ->
     _ -> lists:max(Counts)
   end.
 
-get_best_solution() ->
-  F = fun() -> mnesia:read(best_solution, node()) end,
-  mnesia:transaction(F).
+get_best_hour(LocaleId) ->
+  {atomic, Res} = mnesia:transaction(fun() ->
+    %% CORREZIONE: Usiamo la tabella 'slot_temporale' invece di 'statistiche_orarie'
+    %% Il pattern cerca tutti i record che hanno come chiave {LocaleId, QualsiasiOra}
+    Pattern = #slot_temporale{key = {LocaleId, '_'}, _ = '_'},
+
+    Stats = mnesia:match_object(Pattern),
+
+    %% Iteriamo sui risultati per trovare l'ora con il conteggio più alto
+    lists:foldl(fun(Record, {BestOra, MaxC}) ->
+      %% Il record è definito come {slot_temporale, Key, Count}
+      %% Dove Key è {LocaleId, Ora}
+      #slot_temporale{key = {_, Ora}, count = Count} = Record,
+
+      if Count > MaxC -> {Ora, Count};
+        true -> {BestOra, MaxC}
+      end
+                end, {0, -1}, Stats) %% {0, -1} sono i valori iniziali (Ora 0, Count -1)
+                                     end),
+
+  %% Res sarà la tupla {MigliorOra, MigliorCount}, restituiamo solo l'ora
+  {BestH, _} = Res,
+  BestH.
