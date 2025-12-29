@@ -1,76 +1,106 @@
 -module(erlang_actor).
 -export([start/0, loop/1]).
--record(state, {total_users = 0}). %% Stato interno dell'attore
+-record(state, {total_users = 0}).
 
 -include("shared.hrl").
 
 start() ->
-  %% Assicuriamoci che il DB sia pronto
   db_manager:init(),
-  %% Popoliamo con dati di prova se vuoto
-  db_manager:add_locale(1, "Golden Pub", "Pub", 15.0, {18, 24}),
-  db_manager:add_locale(2, "Pizza Express", "Ristorante", 25.0, {19, 23}),
 
-  io:format(">> Locali di prova aggiunti al DB.~n"),
-  io:format(">> Locali presenti: ~p~n", [db_manager:get_locali()]),
+  %% --- 1. CARICAMENTO DIFFERENZIATO PER NODO (Configurazione PISA) ---
+  NodeName = atom_to_list(node()),
 
-  Pid = spawn_link(?MODULE, loop, [#state{}]),
-  register(vincolo_service, Pid),
-  io:format(">> Attore Vincoli avviato con logica di calcolo.~n"),
-  {ok, Pid}.
+  %% Definiamo i locali per zona (5 per worker)
+  LocaliDaCaricare = case NodeName of
+                       "worker1@" ++ _ -> %% --- ZONA SANTA MARIA (Zona Torre/Uni) IDs 1-9 ---
+                         [
+                           {1, "L'Ostellino",        "Pub",        12.0, {11, 24}}, %% Panini famosi
+                           {2, "Pizzeria Il Montino","Pizzeria",   15.0, {19, 23}}, %% Storica
+                           {3, "Rist. Alle Bandierine","Ristorante",35.0, {19, 23}}, %% Spaghetteria
+                           {4, "Filter Coffee Lab",  "Bar",         7.0, {08, 19}}, %% Colazioni moderne
+                           {5, "Auelli",             "Ristorante", 28.0, {12, 15}}  %% Pranzo universitario
+                         ];
+
+                       "worker2@" ++ _ -> %% --- ZONA BORGO STRETTO (Centro Storico) IDs 10-19 ---
+                         [
+                           {10, "Osteria i Santi",   "Ristorante", 32.0, {19, 23}}, %% Turistico ma buono
+                           {11, "Sottobosco Libri",  "Bar",        10.0, {10, 24}}, %% Bar letterario/Jazz
+                           {12, "Pizzeria Le Mura",  "Pizzeria",   18.0, {19, 23}}, %% Cena classica
+                           {13, "Chupiteria",        "Pub",        15.0, {21, 03}}, %% Movida notturna
+                           {14, "Argini e Margini",  "Pub",        14.0, {18, 01}}  %% Estivo sul fiume
+                         ];
+
+                       "worker3@" ++ _ -> %% --- ZONA STAZIONE / CORSO ITALIA IDs 20-29 ---
+                         [
+                           {20, "Orzo Bruno",        "Pub",        16.0, {18, 02}}, %% Birra artigianale famosa
+                           {21, "Keith Art Cafe",    "Bar",         6.0, {07, 21}}, %% Vicino al Murales
+                           {22, "Pizzeria Da Nando", "Pizzeria",   14.0, {12, 23}}, %% Economico e veloce
+                           {23, "Ristorante La Scaletta","Ristorante", 55.0, {19, 23}}, %% Pesce di alto livello
+                           {24, "Bar La Borsa",      "Bar",         5.0, {06, 20}}  %% Storico per caffè
+                         ];
+
+                       _ ->
+                         io:format(">> Nodo sconosciuto, nessun locale caricato.~n"),
+                         []
+                     end,
+
+  %% Carichiamo i locali scelti
+  lists:foreach(fun({Id, Nome, Tipo, Prezzo, Orari}) ->
+    db_manager:add_locale(Id, Nome, Tipo, Prezzo, Orari)
+                end, LocaliDaCaricare),
+  %% ---------------------------------------------
+
+  io:format(">> Attore Remoto pronto su ~p con ~p locali.~n", [node(), length(LocaliDaCaricare)]),
+  register(vincolo_service, self()),
+  loop(#state{total_users = 0}).
 
 loop(State) ->
   receive
     {nuovo_vincolo, Id, IdEvento, Email, OraInizio, OraFine, BudMin, BudMax, TipoPreferito, _Pos} ->
-
       io:format("--- ELABORAZIONE VINCOLO ID: ~p ---~n", [Id]),
-      io:format("Evento: ~p | Utente: ~p | Orario: ~p - ~p | Budget: ~p - ~p | TipoPref: ~p~n",
-        [IdEvento, Email, OraInizio, OraFine, BudMin, BudMax, TipoPreferito]),
-
-      %% 1. Incrementiamo il contatore globale utenti
       NewTotalUsers = State#state.total_users + 1,
-
-      %% 2. Recuperiamo tutti i locali gestiti da questo nodo
       Locali = db_manager:get_locali(),
-
-      %% 3. Ciclo su ogni locale per calcolo incrementale
-      lists:foreach(fun(L) -> processa_locale(L, {OraInizio, OraFine, BudMin, BudMax, TipoPreferito}, NewTotalUsers) end, Locali),
-
+      lists:foreach(fun(L) -> processa_locale(IdEvento, L, {OraInizio, OraFine, BudMin, BudMax, TipoPreferito}, NewTotalUsers) end, Locali),
       loop(State#state{total_users = NewTotalUsers});
+
+    {richiedi_parziale, Pid_coordinatore, E_id} ->
+      io:format(">> Worker (~p): Richiesta ottimo per Evento ~p~n", [node(), E_id]),
+      {atomic, RisultatoMnesia} = mnesia:transaction(fun() -> mnesia:read(best_solution, E_id) end),
+      Risposta = case RisultatoMnesia of
+                   [Record] -> Record;
+                   []       -> empty
+                 end,
+      Pid_coordinatore ! {risposta_parziale, E_id, Risposta},
+      loop(State);
 
     Other ->
       io:format("Messaggio sconosciuto: ~p~n", [Other]),
       loop(State)
   end.
 
-processa_locale(Locale, {U_Start, U_End, BMin, BMax, TipoPref}, TotUsers) ->
-  %% Estrazione dati locale
+processa_locale(IdEvento, Locale, {U_Start, U_End, BMin, BMax, TipoPref}, TotUsers) ->
   {locale, L_Id, _Nome, L_Tipo, L_Prezzo, L_Apertura, L_Chiusura} = Locale,
 
-  %% A. Calcolo Pqualità specifico per questo utente
   QualitaUtente = utils:calcola_qualita_utente(L_Tipo, L_Prezzo, TipoPref, BMin, BMax),
-  io:format("Locale ~p -> QualitaUtente calcolata: ~.2f~n", [L_Id, QualitaUtente]),
-
-  %% B. Calcolo Sovrapposizione Oraria
   SlotSovrapposti = utils:calcola_slot_sovrapposti(U_Start, U_End, L_Apertura, L_Chiusura),
-  io:format("Locale ~p -> Slot Sovrapposti: ~p~n", [L_Id, SlotSovrapposti]),
 
-  %% C. Aggiornamento DB (Mnesia) e recupero nuovi aggregati
+  %% Aggiorniamo le statistiche
   {atomic, {NewAvgQual, MaxSlotCount}} = db_manager:update_stats(L_Id, QualitaUtente, SlotSovrapposti, TotUsers),
 
-  %% D. Calcolo Itot aggiornato
+  %% --- 2. RECUPERIAMO L'ORA MIGLIORE ---
+  %% Dobbiamo chiedere al DB qual è l'ora corrispondente al picco di partecipanti
+  BestHour = db_manager:get_best_hour(L_Id),
+  %% -------------------------------------
+
   Itot = utils:calcola_itot(NewAvgQual, MaxSlotCount, TotUsers, L_Id),
-  io:format("Locale ~p -> Itot calcolato: ~.4f~n", [L_Id, Itot]),
-  
-  io:format("Locale ~p -> QualitaUtente: ~.2f | NewAvg: ~.2f | MaxPartecipanti: ~p | Itot: ~.4f~n",
-    [L_Id, QualitaUtente, NewAvgQual, MaxSlotCount, Itot]),
 
-  %% E. Verifica se è la nuova soluzione ottimale
-  check_and_update_best(L_Id, Itot).
+  %% Passiamo BestHour alla funzione di aggiornamento
+  check_and_update_best(IdEvento, L_Id, Itot, BestHour).
 
-check_and_update_best(LocaleId, Itot) ->
+%% Modificata per accettare BestHour
+check_and_update_best(E_id, LocaleId, Itot, BestHour) ->
   F = fun() ->
-    CurrentBest = mnesia:read(best_solution, node()),
+    CurrentBest = mnesia:read(best_solution, E_id),
     Update = case CurrentBest of
                [] -> true;
                [#best_solution{score=OldScore}] when Itot > OldScore -> true;
@@ -78,8 +108,18 @@ check_and_update_best(LocaleId, Itot) ->
              end,
 
     if Update ->
-      io:format(">>> NUOVO RECORD LOCALE! Locale ~p con Score ~.4f~n", [LocaleId, Itot]),
-      mnesia:write(#best_solution{id_nodo=node(), id_locale=LocaleId, ora_inizio=0, score=Itot});
+      [LocaleRec] = mnesia:read(locale, LocaleId),
+      NomeDelLocale = LocaleRec#locale.nome,
+
+      io:format(">>> NUOVO RECORD! Locale ~p (~p) Score ~.4f Orario ~p~n", [LocaleId, NomeDelLocale, Itot, BestHour]),
+
+      %% --- 3. SCRIVIAMO ORA E SCORE CORRETTI ---
+      mnesia:write(#best_solution{
+        id_evento = E_id,
+        id_locale = LocaleId,
+        nome_locale = NomeDelLocale,
+        ora_inizio = BestHour,  %% <--- Qui salviamo l'ora reale (es. 20)
+        score = Itot});         %% <--- Qui salviamo lo score reale
       true -> ok
     end
       end,

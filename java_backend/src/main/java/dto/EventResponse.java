@@ -16,6 +16,9 @@ public class EventResponse {
     private String descrizione;
     private LocalDateTime deadline;
     private Boolean isPrivato;
+    private String luogoScelto;
+    private String orarioScelto;
+    private Double punteggioFinale;
 
     // Invece dell'oggetto User completo, restituiamo solo le email
     private String email_creatore;

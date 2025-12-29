@@ -1,21 +1,54 @@
 package com.dsmt.java_backend.service;
 
 import com.dsmt.java_backend.model.Vincolo;
+import com.dsmt.java_backend.repository.EventRepository;
 import com.ericsson.otp.erlang.*;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 
 @Service
 public class ErlangService {
 
-    private static final String REMOTE_NODE_NAME = "server_node@PCDelLorenzo";
+    private static final String REMOTE_NODE_NAME = "coordinator_node@127.0.0.1";
     private static final String COOKIE = "secret123";
-    private static final String MAILBOX = "vincolo_service";
+    private static final String MAILBOX = "coordinator_service";
+    private OtpNode javaNode = null;
+    private OtpMbox mbox;
+
+    @Autowired
+    private EventRepository eventRepository; // <--- 1. INIETTA IL REPOSITORY
+
+    public ErlangService() throws IOException {
+
+    }
+
+    @PostConstruct
+    public void init() {
+        try {
+            // Qui eventRepository è PRONTO
+            this.javaNode = new OtpNode("java_backend_node@127.0.0.1", COOKIE);
+            mbox = javaNode.createMbox("java_mailbox");
+
+            System.out.println(">> Nodo Java avviato. Avvio Receiver...");
+
+            // Passiamo il repository (non null) al receiver
+            ErlangReceiver receiver = new ErlangReceiver(mbox, eventRepository);
+
+            Thread t = new Thread(receiver);
+            t.setDaemon(true);
+            t.start();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void sendVincolo(Vincolo v) {
-        OtpNode javaNode = null;
+
         try {
-            javaNode = new OtpNode("java_client_vincoli", COOKIE);
+
             OtpMbox mbox = javaNode.createMbox();
 
             OtpErlangObject[] payload = new OtpErlangObject[]{
@@ -46,10 +79,32 @@ public class ErlangService {
                 System.err.println("Erlang non raggiungibile.");
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (javaNode != null) javaNode.close();
         }
     }
+    public void triggerGlobalOptimum(Integer eventId) {
+        System.out.println("Vincolo triggerGlobalOptimum");
+
+        try {
+            OtpMbox mbox = javaNode.createMbox();
+
+            // Prepariamo il messaggio: {calcola_ottimo_globale, EventId}
+            OtpErlangObject[] payload = new OtpErlangObject[]{
+                    new OtpErlangAtom("calcola_ottimo_globale"),
+                    new OtpErlangLong(eventId)
+            };
+            OtpErlangTuple msg = new OtpErlangTuple(payload);
+
+            if (javaNode.ping(REMOTE_NODE_NAME, 2000)) {
+                mbox.send(MAILBOX, REMOTE_NODE_NAME, msg);
+                System.out.println("Richiesta Ottimo Globale inviata per Evento: " + eventId);
+            } else {
+                System.err.println("Nodo Erlang Master non raggiungibile per la deadline.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
