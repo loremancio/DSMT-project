@@ -3,8 +3,8 @@
 -behavior(gen_server).
 -export([start_link/0, init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2]).
 
--define(WORKER_NODES, ['worker1@127.0.0.1', 'worker2@127.0.0.1', 'worker3@127.0.0.1']).
--define(JAVA_NODE, 'java_backend_node@127.0.0.1').
+-define(WORKER_NODES, ['worker1@10.2.1.40', 'worker2@10.2.1.45', 'worker3@10.2.1.46']).
+-define(JAVA_NODE, 'java_backend_node@10.2.1.39').
 -include("shared.hrl").
 %% Avvio del server
 start_link() ->

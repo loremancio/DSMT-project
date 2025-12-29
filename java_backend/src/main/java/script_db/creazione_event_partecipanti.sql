@@ -16,6 +16,6 @@ CREATE TABLE event_partecipanti (
 
                                     CONSTRAINT fk_utente
                                         FOREIGN KEY (user_id)
-                                            REFERENCES user(id)
+                                            REFERENCES User(id)
                                             ON DELETE CASCADE   -- Se elimini l'utente, elimini le sue iscrizioni
 );

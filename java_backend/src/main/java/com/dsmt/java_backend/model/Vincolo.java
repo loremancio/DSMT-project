@@ -1,14 +1,14 @@
 package com.dsmt.java_backend.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+import lombok.*;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+
+
 @Table(name = "vincoli")
 public class Vincolo {
 

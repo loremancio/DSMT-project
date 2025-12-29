@@ -18,6 +18,6 @@ public class EventResponse {
     private Boolean isPrivato;
 
     // Invece dell'oggetto User completo, restituiamo solo le email
-    private String email_creatore;
-    private List<String> mail_partecipanti;
+    private String emailCreatore;
+    private List<String> mailPartecipanti;
 }

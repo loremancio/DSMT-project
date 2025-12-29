@@ -15,6 +15,6 @@ CREATE TABLE vincoli (
                                  REFERENCES event(id)
                                  ON DELETE CASCADE,
                          CONSTRAINT fk_vincoli_user
-                             FOREIGN KEY (user_id) REFERENCES user(id)
-                                 ON DELETE CASCADE;
+                             FOREIGN KEY (user_id) REFERENCES User(id)
+                                 ON DELETE CASCADE
 );

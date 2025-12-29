@@ -1,7 +1,7 @@
 package com.dsmt.java_backend.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.time.Instant;
 import java.util.HashSet;
@@ -11,6 +11,11 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
+
+@NoArgsConstructor
+@AllArgsConstructor
+
+
 @Table(name = "event") // Specifica il nome della tabella se non coincide con il nome della classe
 public class Event {
 

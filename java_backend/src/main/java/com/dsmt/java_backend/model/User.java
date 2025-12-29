@@ -2,10 +2,14 @@ package com.dsmt.java_backend.model;
 
 import jakarta.persistence.*;
 
-import lombok.Data;
+import lombok.*;
 
 @Data
 @Entity
+
+@NoArgsConstructor
+@AllArgsConstructor
+
 
 public class User {
     @Id

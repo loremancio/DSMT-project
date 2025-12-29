@@ -9,19 +9,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="93be9511-f638-459c-8ac6-7cf3751c376c" name="Changes" comment="versione quasi definitiva. Implementata la comunicazione java-&gt;erlang_coordinator-&gt;erlang_actor-&gt;erlang_coordinator-&gt;java&#10;allo scadere della deadline.&#10;In pratica:&#10; 1.prendo le query con deadline = oggi&#10; 2. avvio un timer&#10; 3.java manda la richiesta per l'ottimo al coordinatore&#10; 4. il coordinatore richiede le sol parziali&#10; 5 gli erlang actor prendono la sol corrente e la mandano&#10; 6. [manca questo passaggio] confronto le sol parziali e scelgo l'ottimo&#10; 7. invio l'ottimo a java&#10; &#10; Per ricevere l'ottimo ho creato un thread a parte che sta in ascolto sulla mailbox.">
+    <list default="true" id="93be9511-f638-459c-8ac6-7cf3751c376c" name="Changes" comment="calcolo su più nodi completato">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/erlang_backend/Mnesia.server_node@LAPTOP-12PQ5VNM/DECISION_TAB.LOG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/erlang_backend/Mnesia.server_node@LAPTOP-12PQ5VNM/LATEST.LOG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/erlang_backend/Mnesia.server_node@LAPTOP-12PQ5VNM/schema.DAT" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/erlang_backend/src/Mnesia.worker1@127.0.0.1/DECISION_TAB.LOG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/erlang_backend/src/Mnesia.worker1@127.0.0.1/LATEST.LOG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/erlang_backend/src/Mnesia.worker1@127.0.0.1/schema.DAT" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/erlang_backend/src/erlang_actor.erl" beforeDir="false" afterPath="$PROJECT_DIR$/erlang_backend/src/erlang_actor.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/erlang_backend/src/erlang_coordinator.erl" beforeDir="false" afterPath="$PROJECT_DIR$/erlang_backend/src/erlang_coordinator.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/erlang_backend/src/shared.hrl" beforeDir="false" afterPath="$PROJECT_DIR$/erlang_backend/src/shared.hrl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/DeadlineManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/DeadlineManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/ErlangService.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/ErlangService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/controller/EventController.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/controller/EventController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/Event.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/Event.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/Vincolo.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/Vincolo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/EventService.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/EventService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/dto/EventRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/dto/EventRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/dto/EventResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/dto/EventResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/script_db/creazione_event.sql" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/script_db/creazione_event.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/script_db/creazione_event_partecipanti.sql" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/script_db/creazione_event_partecipanti.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/script_db/creazione_vincoli.sql" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/script_db/creazione_vincoli.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,7 +44,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="lore" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -85,35 +87,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;Spring Boot.JavaBackendApplication (1).executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.JavaBackendApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Tomcat Server.Tomcat 11.0.141.executor&quot;: &quot;Run&quot;,
-    &quot;Tomcat Server.test.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Matteo&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Matteo/Documents/GitHub/DSMT-project/java_backend/src/main&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.JavaBackendApplication (1).executor": "Run",
+    "Spring Boot.JavaBackendApplication.executor": "Run",
+    "Tomcat Server.Tomcat 11.0.141.executor": "Run",
+    "Tomcat Server.test.executor": "Run",
+    "git-widget-placeholder": "Matteo",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Matteo/Documents/GitHub/DSMT-project/java_backend/src/main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.keymap",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Matteo\Documents\GitHub\DSMT-project\java_backend\src\main" />
@@ -344,6 +346,8 @@
       <workItem from="1766490638115" duration="28353000" />
       <workItem from="1766758393454" duration="764000" />
       <workItem from="1766759361151" duration="17533000" />
+      <workItem from="1766841373736" duration="14000" />
+      <workItem from="1766850703252" duration="26053000" />
     </task>
     <task id="LOCAL-00001" summary="aggiunto le funzionalità di base per la registrazione e login lato backend">
       <option name="closed" value="true" />
@@ -418,7 +422,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="lore" />
+                        <option value="main" />
                       </list>
                     </value>
                   </entry>
@@ -445,7 +449,7 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/ErlangService.java</url>
           <line>28</line>
-          <properties class="com.dsmt.java_backend.service.ErlangService">
+          <properties class="com.dsmt.java_backend.service.ErlangService" method="sendVincolo">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
