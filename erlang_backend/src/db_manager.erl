@@ -1,120 +1,192 @@
-%% Modulo per la gestione del database Mnesia: creazione tabelle, scrittura e lettura delle statistiche.
 -module(db_manager).
--export([init/0, add_locale/5, get_locali/0, update_stats/4, get_best_hour/1]).
+-export([init/0, add_locale/5, get_locali/0, update_stats/4, get_best_hour/2, increment_total_users/1, find_best_locale_live/1]).
 
 -include("shared.hrl").
 
-%% init/0
-%% Inizializza Mnesia: crea lo schema, avvia il nodo e crea le tabelle utilizzate.
-%% Le tabelle si basano sui record definiti in 'shared.hrl':
-%%  - locale
-%%  - stats_locale
-%%  - slot_temporale
-%%  - best_solution
-%%  - global_state
+%% Inizializza Mnesia e le tabelle necessarie
 init() ->
-  %% Crea lo schema locale per questo nodo ed avvia Mnesia
   mnesia:create_schema([node()]),
   mnesia:start(),
 
-  %% Crea le tabelle con gli attributi basati sulle definizioni dei record
-  mnesia:create_table(locale, [{attributes, record_info(fields, locale)}]),
-  mnesia:create_table(stats_locale, [{attributes, record_info(fields, stats_locale)}]),
-  mnesia:create_table(slot_temporale, [{attributes, record_info(fields, slot_temporale)}]),
-  mnesia:create_table(best_solution, [{attributes, record_info(fields, best_solution)}]),
-  mnesia:create_table(global_state, [{attributes, record_info(fields, global_state)}]),
+  %% Usiamo disc_copies per mantenere i dati anche se il nodo si riavvia
+  TableOptions = [{attributes, record_info(fields, locale)}, {disc_copies, [node()]}],
+  StatsOptions = [{attributes, record_info(fields, stats_locale)}, {disc_copies, [node()]}],
+  SlotOptions  = [{attributes, record_info(fields, slot_temporale)}, {disc_copies, [node()]}],
+  BestOptions  = [{attributes, record_info(fields, best_solution)}, {disc_copies, [node()]}],
+  GlobalOptions= [{attributes, record_info(fields, global_state)}, {disc_copies, [node()]}],
 
-  %% Attende che tutte le tabelle siano pronte
+  mnesia:create_table(locale, TableOptions),
+  mnesia:create_table(stats_locale, StatsOptions),
+  mnesia:create_table(slot_temporale, SlotOptions),
+  mnesia:create_table(best_solution, BestOptions),
+  mnesia:create_table(global_state, GlobalOptions),
+
+  %% Attendi che le tabelle siano pronte prima di procedere
   mnesia:wait_for_tables([locale, stats_locale, slot_temporale, best_solution, global_state], 5000),
 
-  io:format(">> Mnesia Database Inizializzato e Pronto.~n").
+  io:format(">> Mnesia Database Inizializzato.~n").
 
-% add_locale/5
-% Aggiunge un nuovo locale al database con le informazioni fornite.
-% Inizializza anche le statistiche del locale.
-% Parametri:
-%  - Id: Identificativo univoco del locale
-%  - Nome: Nome del locale
-%  - Tipo: Tipo di locale (es. ristorante, bar, ecc.)
-%  - Prezzo: Prezzo medio del locale
-%  - {Apertura, Chiusura}: Orari di apertura e chiusura del locale
+%% Aggiunge un nuovo locale al database
+%% Parametri:
+%% - Id: Identificativo univoco del locale
+%% - Nome: Nome del locale
+%% - Tipo: Tipo di locale (es. "Ristorante", "Bar", ecc.)
+%% - Prezzo: Prezzo medio del locale
+%% - Orari: Tupla {Apertura, Chiusura} che indica gli orari di apertura
 add_locale(Id, Nome, Tipo, Prezzo, {Apertura, Chiusura}) ->
   F = fun() ->
-    % Scrive il record del locale
-    mnesia:write(#locale{id=Id, nome=Nome, tipo=Tipo, prezzo_medio=Prezzo, apertura=Apertura, chiusura=Chiusura}),
-    % Inizializza le statistiche del locale
-    mnesia:write(#stats_locale{id_locale=Id, somma_qualita=0.0, num_utenti=0})
-  end,
+    mnesia:write(#locale{id=Id, nome=Nome, tipo=Tipo, prezzo_medio=Prezzo, apertura=Apertura, chiusura=Chiusura})
+      end,
   mnesia:transaction(F).
 
-% get_locali/0
-% Recupera tutti i locali presenti nel database.
+%% Recupera tutti i locali dal database
 get_locali() ->
   F = fun() -> mnesia:match_object(#locale{_='_'}) end,
   {atomic, Res} = mnesia:transaction(F),
   Res.
 
-% update_stats/4
-% Aggiorna le statistiche di un locale con un nuovo punteggio di qualità e il numero
-% di utenti che che possono partecipare in determinati orari, basandosi sulle
-% ore che si sovrappongono tra le preferenze dell'utente e gli orari del locale.
-% Restituisce la nuova media del punteggio di qualità e il conteggio massimo
-% di utenti nelle ore sovrapposte.
-% Parametri:
-%  - LocaleId: Identificativo del locale da aggiornare
-%  - PunteggioQualita: Nuovo punteggio di qualità da aggiungere
-%  - OreSovrapposte: Lista delle ore sovrapposte
-%  - TotaleUtentiAggiornato: Numero totale di utenti che hanno fornito feedback
-update_stats(LocaleId, PunteggioQualita, OreSovrapposte, TotaleUtentiAggiornato) ->
+%% Aggiorna le statistiche per un locale specifico e per un determinato evento
+%% Parametri:
+%% - IdEvento: Identificativo dell'evento per cui si aggiornano le statistiche
+%% - LocaleId: Identificativo del locale
+%% - PunteggioQualita: Punteggio di qualità relativo al vincolo utente
+%% - OreSovrapposte: Lista delle ore (interi) in cui c'è sovrapposizione tra vincolo e orari del locale
+%% Ritorna:
+%% - {MediaQualita, MaxSlotCount}: Tupla con la nuova media di qualità e il massimo conteggio di slot temporali
+update_stats(IdEvento, LocaleId, PunteggioQualita, OreSovrapposte) ->
   F = fun() ->
-    % Legge le statistiche correnti del locale
-    [Stats] = mnesia:read(stats_locale, LocaleId),
-    % Aggiorna la somma della qualità e il numero di utenti
+    %% Chiave univoca per stats_locale: {IdEvento, LocaleId}
+    Key = {IdEvento, LocaleId},
+
+    %% Aggiorna le statistiche di qualità per il locale specifico e l'evento
+    Stats = case mnesia:read(stats_locale, Key) of
+              [] -> #stats_locale{key=Key, somma_qualita=0.0, num_utenti=0};
+              [S] -> S
+            end,
+
+    %% Aggiorna somma qualità e numero utenti
     NuovaSomma = Stats#stats_locale.somma_qualita + PunteggioQualita,
     NuoviUtenti = Stats#stats_locale.num_utenti + 1,
     mnesia:write(Stats#stats_locale{somma_qualita=NuovaSomma, num_utenti=NuoviUtenti}),
 
-    % Aggiorna il numero di utenti per ogni ora sovrapposta
+    %% Aggiorna il conteggio di utenti per ogni slot temporale sovrapposto
     lists:foreach(fun(Ora) ->
-      Key = {LocaleId, Ora},
-      case mnesia:read(slot_temporale, Key) of
-        [] -> mnesia:write(#slot_temporale{key=Key, count=1});
-        [S] -> mnesia:write(S#slot_temporale{count=S#slot_temporale.count + 1})
+      SlotKey = {IdEvento, LocaleId, Ora},
+      case mnesia:read(slot_temporale, SlotKey) of
+        [] -> mnesia:write(#slot_temporale{key=SlotKey, count=1});
+        [SlotRec] -> mnesia:write(SlotRec#slot_temporale{count=SlotRec#slot_temporale.count + 1})
       end
-    end, OreSovrapposte),
+                  end, OreSovrapposte),
 
-    {NuovaSomma / NuoviUtenti, get_max_slot_count(LocaleId)}
+    %% Ritorna la nuova media del punteggio per un determinato locale ed evento e il massimo conteggio di
+    %% utenti in uno slot temporale per quel locale ed evento
+    {NuovaSomma / NuoviUtenti, get_max_slot_count_internal(IdEvento, LocaleId)}
       end,
   mnesia:transaction(F).
 
-get_max_slot_count(LocaleId) ->
-  Slots = mnesia:match_object(#slot_temporale{key={LocaleId, '_'}, _='_'}),
+%% Recupera il massimo conteggio di utenti in uno slot temporale per un dato locale ed evento
+%% Parametri:
+%% - IdEvento: Identificativo dell'evento
+%% - LocaleId: Identificativo del locale
+%% Ritorna:
+%% - MaxCount: Massimo conteggio di utenti in uno slot temporale per quel locale ed evento
+get_max_slot_count_internal(IdEvento, LocaleId) ->
+  %% Cerca pattern {IdEvento, LocaleId, QualsiasiOra}
+  Pattern = #slot_temporale{key={IdEvento, LocaleId, '_'}, _='_'},
+  Slots = mnesia:match_object(Pattern),
   Counts = [C || #slot_temporale{count=C} <- Slots],
   case Counts of
     [] -> 0;
     _ -> lists:max(Counts)
   end.
 
-get_best_hour(LocaleId) ->
+%% Recupera l'ora con il massimo conteggio di utenti per un dato locale ed evento
+%% Parametri:
+%% - IdEvento: Identificativo dell'evento
+%% - LocaleId: Identificativo del locale
+%% Ritorna:
+%% - BestH: Ora con il massimo conteggio di utenti per quel locale ed evento
+get_best_hour(IdEvento, LocaleId) ->
   {atomic, Res} = mnesia:transaction(fun() ->
-    %% CORREZIONE: Usiamo la tabella 'slot_temporale' invece di 'statistiche_orarie'
-    %% Il pattern cerca tutti i record che hanno come chiave {LocaleId, QualsiasiOra}
-    Pattern = #slot_temporale{key = {LocaleId, '_'}, _ = '_'},
-
+    Pattern = #slot_temporale{key = {IdEvento, LocaleId, '_'}, _ = '_'},
     Stats = mnesia:match_object(Pattern),
-
-    %% Iteriamo sui risultati per trovare l'ora con il conteggio più alto
-    lists:foldl(fun(Record, {BestOra, MaxC}) ->
-      %% Il record è definito come {slot_temporale, Key, Count}
-      %% Dove Key è {LocaleId, Ora}
-      #slot_temporale{key = {_, Ora}, count = Count} = Record,
-
-      if Count > MaxC -> {Ora, Count};
-        true -> {BestOra, MaxC}
-      end
-                end, {0, -1}, Stats) %% {0, -1} sono i valori iniziali (Ora 0, Count -1)
+    lists:foldl(fun(#slot_temporale{key={_, _, Ora}, count=C}, {BestOra, MaxC}) ->
+      if C > MaxC -> {Ora, C}; true -> {BestOra, MaxC} end
+                end, {0, -1}, Stats)
                                      end),
-
-  %% Res sarà la tupla {MigliorOra, MigliorCount}, restituiamo solo l'ora
   {BestH, _} = Res,
   BestH.
+
+%% Incrementa il contatore totale di utenti per un dato evento
+%% Parametri:
+%% - IdEvento: Identificativo dell'evento
+%% Ritorna:
+%% - Count: Nuovo conteggio totale di utenti per quell'evento
+increment_total_users(IdEvento) ->
+  F = fun() ->
+    %% La chiave del contatore ora include l'IdEvento
+    Key = {total_users, IdEvento},
+    case mnesia:read(global_state, Key) of
+      [] ->
+        mnesia:write(#global_state{key=Key, value=1}),
+        1;
+      [#global_state{value=V}] ->
+        NewV = V + 1,
+        mnesia:write(#global_state{key=Key, value=NewV}),
+        NewV
+    end
+      end,
+  {atomic, Count} = mnesia:transaction(F),
+  Count.
+
+%% Trova il miglior locale in tempo reale per un dato evento
+%% Parametri:
+%% - IdEvento: Identificativo dell'evento
+%% Ritorna:
+%% - BestSolution: Record #best_solution con il miglior locale trovato, o 'empty' se nessun dato disponibile
+find_best_locale_live(IdEvento) ->
+  F = fun() ->
+    Locali = mnesia:match_object(#locale{_='_'}),
+
+    %% Recuperiamo TotUsers SOLO per questo evento
+    TotUsers = case mnesia:read(global_state, {total_users, IdEvento}) of
+                 [#global_state{value=V}] -> V;
+                 [] -> 0
+               end,
+
+    if TotUsers == 0 -> empty; %% Nessun dato per questo evento
+      true ->
+        lists:foldl(fun(LocaleRec, CurrentBest) ->
+          L_Id = LocaleRec#locale.id,
+          Nome = LocaleRec#locale.nome,
+
+          %% Leggiamo statistiche SOLO per questo evento e questo locale
+          StatsKey = {IdEvento, L_Id},
+          case mnesia:read(stats_locale, StatsKey) of
+            [] -> CurrentBest; %% Nessun voto qui, saltiamo
+            [Stats] ->
+              AvgQual = Stats#stats_locale.somma_qualita / Stats#stats_locale.num_utenti,
+
+              %% Richiamiamo le funzioni helper interne/esterne passando IdEvento
+              MaxSlots = get_max_slot_count_internal(IdEvento, L_Id),
+              Itot = utils:calcola_itot(AvgQual, MaxSlots, TotUsers, L_Id),
+
+              PatternH = #slot_temporale{key = {IdEvento, L_Id, '_'}, _ = '_'},
+              SlotsH = mnesia:match_object(PatternH),
+              {BestHour, _} = lists:foldl(fun(#slot_temporale{key={_, _, Ora}, count=C}, {BestOra, MaxC}) ->
+                if C > MaxC -> {Ora, C}; true -> {BestOra, MaxC} end
+                                          end, {0, -1}, SlotsH),
+
+              case CurrentBest of
+                empty ->
+                  #best_solution{id_evento=IdEvento, id_locale=L_Id, nome_locale=Nome, ora_inizio=BestHour, score=Itot};
+                #best_solution{score=MaxScore} when Itot > MaxScore ->
+                  #best_solution{id_evento=IdEvento, id_locale=L_Id, nome_locale=Nome, ora_inizio=BestHour, score=Itot};
+                _ -> CurrentBest
+              end
+          end
+                    end, empty, Locali)
+    end
+      end,
+  {atomic, Result} = mnesia:transaction(F),
+  Result.
