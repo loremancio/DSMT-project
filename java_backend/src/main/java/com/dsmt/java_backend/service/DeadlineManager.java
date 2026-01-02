@@ -32,10 +32,18 @@ public class DeadlineManager {
         LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
         LocalDateTime endOfDay = LocalDate.now().atTime(LocalTime.MAX);
         LocalDateTime now = LocalDateTime.now();
+        System.out.println(">> Orario attuale: " + now);
+
         // Usiamo il nuovo metodo del repository
-        List<Event> todayEvents = eventRepository.findByDeadlineBetween(now, endOfDay);
+        List<Event> todayEvents = eventRepository.findByDeadlineBetween(startOfDay, endOfDay);
+
+        System.out.println(">> Eventi trovati nel DB per oggi: " + todayEvents.size());
 
         for (Event event : todayEvents) {
+            if (!event.getDeadline().isAfter(now)) {
+                continue;
+            }
+            System.out.println(">> Scheduling evento ID " + event.getId() + " per le " + event.getDeadline());
             taskScheduler.schedule(() -> {erlangService.triggerGlobalOptimum(event.getId());},
                                             Date.from(event.getDeadline().atZone(ZoneId.systemDefault()).toInstant()));
         }

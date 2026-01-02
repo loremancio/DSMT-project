@@ -6,6 +6,7 @@ import com.dsmt.java_backend.repository.EventRepository;
 import com.dsmt.java_backend.repository.UserRepository;
 import dto.EventRequest;
 import dto.EventResponse;
+import java.time.ZoneId;
 import io.micrometer.observation.ObservationFilter;
 import lombok.RequiredArgsConstructor;
 
@@ -132,12 +133,12 @@ public class EventService {
     }
     public List<EventResponse> getAllFuturePublicEvents(){
 
-        return conversione(eventRepository.findEventiPubbliciFuturi(LocalDateTime.now()));
+        return conversione(eventRepository.findEventiPubbliciFuturi(LocalDateTime.now(ZoneId.of("UTC"))));
     }
     public List<EventResponse> getAllMyPrivateEvents(Integer user_id){
         return conversione(eventRepository.getAllMyPrivateEvents(user_id));
     }
     public List<EventResponse> getAllMyPrivateFutureEvents(Integer user_id){
-        return conversione(eventRepository.getAllMyPrivateFutureEvents(LocalDateTime.now(), user_id));
+        return conversione(eventRepository.getAllMyPrivateFutureEvents(LocalDateTime.now(ZoneId.of("UTC")), user_id));
     }
 }
