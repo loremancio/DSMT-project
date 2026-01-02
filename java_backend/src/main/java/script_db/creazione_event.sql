@@ -9,6 +9,6 @@ CREATE TABLE event (
     -- Definizione della chiave esterna
     CONSTRAINT fk_event_creatore
         FOREIGN KEY (creatore_id)
-        REFERENCES User(id)
+        REFERENCES user(id)
         ON DELETE CASCADE
 );

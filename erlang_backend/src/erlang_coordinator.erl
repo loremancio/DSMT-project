@@ -37,9 +37,9 @@ handle_info({nuovo_vincolo, _, _, _, _, _, _, _, _, Posizione} = Msg, State) ->
 
   %% Determiniamo il nodo di destinazione confrontando stringhe
   TargetNode = case Posizione of
-                 "NORD"   -> 'worker1@127.0.0.1';
-                 "CENTRO" -> 'worker2@127.0.0.1';
-                 "SUD"    -> 'worker3@127.0.0.1';
+                 "NORD"   -> 'worker1@10.2.1.40';
+                 "CENTRO" -> 'worker2@10.2.1.45';
+                 "SUD"    -> 'worker3@10.2.1.46';
                  _        ->
                    %% Debug: stampa il valore numerico se non combacia
                    io:format(">> Valore ricevuto non riconosciuto: ~p~n", [Posizione]),
@@ -71,7 +71,7 @@ handle_info({calcola_ottimo_globale, EventId}, State) ->
 
 
 
-%% Ricezione della risposta dal Worker
+%% Ricezione della risposta dal Workerabc
 handle_info({risposta_parziale, EventId, Sol}, State) ->
   Sessioni = maps:get(sessioni, State),
 

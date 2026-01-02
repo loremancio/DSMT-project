@@ -150,7 +150,7 @@
         <td><%= e.getNome() %></td>
         <td><%= e.getDescrizione() %></td>
         <td><%= e.getDeadline() %></td>
-        <td><%= e.getEmail_creatore() %></td>
+        <td><%= e.getEmailCreatore() %></td>
         <td><%= e.getIsPrivato() ? "PRIVATO" : "PUBBLICO" %></td>
     </tr>
     <%     }
