@@ -152,6 +152,20 @@
         <td><%= e.getDeadline() %></td>
         <td><%= e.getEmailCreatore() %></td>
         <td><%= e.getIsPrivato() ? "PRIVATO" : "PUBBLICO" %></td>
+
+        <td align="center">
+            <% if (e.getLuogoScelto() != null) { %>
+            <b style="color:green"><%= e.getLuogoScelto() %></b>
+            <% } else { %> - <% } %>
+        </td>
+        <td align="center">
+            <%= (e.getOrarioScelto() != null) ? e.getOrarioScelto() : "-" %>
+        </td>
+        <td align="center">
+            <% if (e.getPunteggioFinale() != null) { %>
+            <span style="color:blue"><%= String.format("%.2f", e.getPunteggioFinale()) %></span>
+            <% } else { %> - <% } %>
+        </td>
     </tr>
     <%     }
     } else { %>

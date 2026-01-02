@@ -7,7 +7,7 @@
 -define(W_PART, 0.5).    %% Peso Partecipazione
 -define(W_QUAL, 0.5).    %% Peso Qualità
 
-%% --- 1. Calcolo Indice Qualità Singolo Utente (Pqualità_k) ---
+%% --- Calcolo Indice Qualità Singolo Utente (Pqualità_k) ---
 %% Pqualità = Wsim * Isim + Wbudget * Ibudget
 calcola_qualita_utente(TipoLocale, PrezzoLocale, TipoPreferito, BudMin, BudMax) ->
   ISim = get_similarity(TipoLocale, TipoPreferito),
@@ -20,7 +20,7 @@ calcola_qualita_utente(TipoLocale, PrezzoLocale, TipoPreferito, BudMin, BudMax) 
 
   (ISim * ?W_SIM) + (IBudget * ?W_BUDGET).
 
-%% --- 2. Matrice di Somiglianza ---
+%% --- Matrice di Somiglianza ---
 get_similarity("Pub", "Birreria") -> 0.9;
 get_similarity("Birreria", "Pub") -> 0.9;
 get_similarity("Ristorante", "Pub") -> 0.2;
@@ -28,7 +28,7 @@ get_similarity("Pub", "Ristorante") -> 0.2;
 get_similarity(X, X) -> 1.0; %% Stesso tipo
 get_similarity(_, _) -> 0.1. %% Default basso
 
-%% --- 3. Indice di Budget ---
+%% --- Indice di Budget ---
 get_budget_index(CostoMedio, BMin, BMax) ->
   Centro = (BMin + BMax) / 2,
   Margine = (BMax - BMin) / 2,
@@ -47,7 +47,7 @@ get_budget_index(CostoMedio, BMin, BMax) ->
       if Val < 0 -> 0.0; true -> Val end
   end.
 
-%% --- 4. Calcolo Slot Sovrapposti  ---
+%% --- Calcolo Slot Sovrapposti  ---
 %% Ritorna una lista di ore (interi) in cui l'utente si sovrappone al locale
 calcola_slot_sovrapposti(InizioUtente, FineUtente, AperturaLocale, ChiusuraLocale) ->
   StartU = trunc(InizioUtente),
@@ -63,7 +63,7 @@ calcola_slot_sovrapposti(InizioUtente, FineUtente, AperturaLocale, ChiusuraLocal
     true -> []
   end.
 
-%% --- 5. Calcolo Itot Finale ---
+%% --- Calcolo Itot Finale ---
 calcola_itot(AvgQuality, MaxPartecipantiSlot, TotaleUtentiSistema, _LocaleId) ->
   IPartecipazione = if TotaleUtentiSistema == 0 -> 0;
                       true -> MaxPartecipantiSlot / TotaleUtentiSistema
