@@ -11,10 +11,10 @@ import java.util.List;
 @AllArgsConstructor // Genera un costruttore con tutti gli argomenti (comodo per i test)
 public class EventRequest {
 
-    private String email_creatore;
+    private String emailCreatore;
     private Boolean isPrivato;
     private String nome;
-    private List<String> mail_partecipanti;
+    private List<String> mailPartecipanti;
     private String descrizione;
     private LocalDateTime deadline;
 }

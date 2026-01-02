@@ -2,9 +2,10 @@
 -behavior(gen_server).
 -export([start_link/0, init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2]).
 
-%% Costanti
--define(WORKER_NODES, ['worker1@127.0.0.1', 'worker2@127.0.0.1', 'worker3@127.0.0.1']).
--define(JAVA_NODE, 'java_backend_node@127.0.0.1').
+
+-define(WORKER_NODES, ['worker1@10.2.1.40', 'worker2@10.2.1.45', 'worker3@10.2.1.46']).
+-define(JAVA_NODE, 'java_backend_node@10.2.1.39').
+
 -include("shared.hrl").
 
 %% Avvia il processo gen_server
@@ -35,10 +36,13 @@ handle_info({nuovo_vincolo, _, _, _, _, _, _, _, _, Posizione} = Msg, State) ->
 
   %% Determina il nodo target in base alla posizione
   TargetNode = case Posizione of
-                 "NORD"   -> 'worker1@127.0.0.1';
-                 "CENTRO" -> 'worker2@127.0.0.1';
-                 "SUD"    -> 'worker3@127.0.0.1';
-                 _ -> undefined
+                 "NORD"   -> 'worker1@10.2.1.40';
+                 "CENTRO" -> 'worker2@10.2.1.45';
+                 "SUD"    -> 'worker3@10.2.1.46';
+                 _        ->
+                   %% Debug: stampa il valore numerico se non combacia
+                   io:format(">> Valore ricevuto non riconosciuto: ~p~n", [Posizione]),
+                   undefined
                end,
 
   %% Inoltra il vincolo al nodo target se raggiungibile

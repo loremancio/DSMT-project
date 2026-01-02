@@ -35,15 +35,15 @@ public class EventService {
         newEvent.setDeadline(dto.getDeadline());
 
         // mappo la gestione creatore da string a oggetto User
-        User CreatoreTrovato = userRepository.findByEmail(dto.getEmail_creatore())
+        User creatore = userRepository.findByEmail(dto.getEmailCreatore())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        newEvent.setCreatore(CreatoreTrovato);
+        newEvent.setCreatore(creatore);
 
-        newEvent.getPartecipanti().add(CreatoreTrovato);
+        newEvent.getPartecipanti().add(creatore);
 
         // gestione partecipanti da List<String> a Set<User>
-        if(dto.getMail_partecipanti() != null)
-            for(String mail: dto.getMail_partecipanti())
+        if(dto.getMailPartecipanti() != null)
+            for(String mail: dto.getMailPartecipanti())
             {
                 User partecipanti = userRepository.findByEmail(mail)
                         .orElseThrow(() -> new RuntimeException("User not found"));
@@ -63,14 +63,18 @@ public class EventService {
             dto.setDescrizione(event.getDescrizione());
             dto.setIsPrivato(event.getIsPrivato());
             dto.setDeadline(event.getDeadline());
-            dto.setEmail_creatore(event.getCreatore().getEmail());
+
+            dto.setEmailCreatore(event.getCreatore().getEmail());
+
+            
             dto.setLuogoScelto(event.getLuogoScelto());
             dto.setOrarioScelto(event.getOrarioScelto());
             dto.setPunteggioFinale(event.getPunteggioFinale());
+
             List<String> emails = event.getPartecipanti().stream()
                     .map(user -> user.getEmail())
                     .collect(Collectors.toList());
-            dto.setMail_partecipanti(emails);
+            dto.setMailPartecipanti(emails);
             listaRisposte.add(dto);
         }
         return listaRisposte;
@@ -82,14 +86,17 @@ public class EventService {
         dto.setDescrizione(event.getDescrizione());
         dto.setIsPrivato(event.getIsPrivato());
         dto.setDeadline(event.getDeadline());
-        dto.setEmail_creatore(event.getCreatore().getEmail());
+
+        dto.setEmailCreatore(event.getCreatore().getEmail());
+
         dto.setLuogoScelto(event.getLuogoScelto());
         dto.setOrarioScelto(event.getOrarioScelto());
         dto.setPunteggioFinale(event.getPunteggioFinale());
+
         List<String> emails = event.getPartecipanti().stream()
                 .map(user -> user.getEmail())
                 .collect(Collectors.toList());
-        dto.setMail_partecipanti(emails);
+        dto.setMailPartecipanti(emails);
         return dto;
     }
 
@@ -103,14 +110,17 @@ public class EventService {
             dto.setDescrizione(event.getDescrizione());
             dto.setIsPrivato(event.getIsPrivato());
             dto.setDeadline(event.getDeadline());
-            dto.setEmail_creatore(event.getCreatore().getEmail());
+
+            dto.setEmailCreatore(event.getCreatore().getEmail());
+
             dto.setLuogoScelto(event.getLuogoScelto());
             dto.setOrarioScelto(event.getOrarioScelto());
             dto.setPunteggioFinale(event.getPunteggioFinale());
+
             List<String> emails = event.getPartecipanti().stream()
                                         .map(user -> user.getEmail())
                                         .collect(Collectors.toList());
-            dto.setMail_partecipanti(emails);
+            dto.setMailPartecipanti(emails);
             listaRisposte.add(dto);
         }
         return listaRisposte;

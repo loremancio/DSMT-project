@@ -25,7 +25,7 @@ public class EventController {
         String emailUser = (String) session.getAttribute("user");
         if (emailUser == null) return "redirect:/login";
 
-        eventRequest.setEmail_creatore(emailUser);
+        eventRequest.setEmailCreatore(emailUser);
 
         eventService.addEvent(eventRequest);
 

@@ -11,7 +11,7 @@ import java.io.IOException;
 @Service
 public class ErlangService {
 
-    private static final String REMOTE_NODE_NAME = "coordinator_node@127.0.0.1";
+    private static final String REMOTE_NODE_NAME = "coordinator_node@10.2.1.39";
     private static final String COOKIE = "secret123";
     private static final String MAILBOX = "coordinator_service";
     private OtpNode javaNode = null;
