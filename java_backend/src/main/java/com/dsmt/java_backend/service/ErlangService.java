@@ -28,7 +28,7 @@ public class ErlangService {
     public void init() {
         try {
             // Qui eventRepository è PRONTO
-            this.javaNode = new OtpNode("java_backend_node@127.0.0.1", COOKIE);
+            this.javaNode = new OtpNode("java_backend_node@10.2.1.39", COOKIE);
             mbox = javaNode.createMbox("java_mailbox");
 
             System.out.println(">> Nodo Java avviato. Avvio Receiver...");

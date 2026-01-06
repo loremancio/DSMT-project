@@ -5,29 +5,28 @@
       <paths name="Java_backend_Erlang_coordinator_DB">
         <serverdata>
           <mappings>
-            <mapping deploy="/root/app" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
       <paths name="Worker1">
         <serverdata>
           <mappings>
-            <mapping deploy="/root/app" local="$PROJECT_DIR$" web="/" />
-            <mapping deploy="/root/app" local="$PROJECT_DIR$/java_backend" />
+            <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
       <paths name="worker2">
         <serverdata>
           <mappings>
-            <mapping deploy="/root/app" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
       <paths name="worker3">
         <serverdata>
           <mappings>
-            <mapping deploy="/root/app" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

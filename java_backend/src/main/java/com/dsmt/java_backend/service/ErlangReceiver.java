@@ -37,7 +37,7 @@ public class ErlangReceiver implements Runnable {
         // Messaggio: {risultato_finale, EventId, {best_solution, EvId, LocId, NomeLoc, Ora, Score}}
         try {
             OtpErlangAtom tag = (OtpErlangAtom) msg.elementAt(0);
-
+            System.out.println((OtpErlangAtom) msg.elementAt(0));
             if ("risultato_finale".equals(tag.atomValue())) {
                 // 1. Prendi l'ID Evento (Indice 1)
                 OtpErlangLong eventIdObj = (OtpErlangLong) msg.elementAt(1);
@@ -66,7 +66,7 @@ public class ErlangReceiver implements Runnable {
 
                 // --- SALVATAGGIO SU DB ---
                 salvaVincitore(eventId, nomeLocale, score, orarioFormattato);
-            }
+            }else{System.out.println("qualcosa non va.");}
         } catch (Exception e) {
             e.printStackTrace();
         }

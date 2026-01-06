@@ -55,7 +55,7 @@ init_internal() ->
 loop(State) ->
   receive
     %% --- NUOVO VINCOLO UTENTE ---
-    {nuovo_vincolo, Id, IdEvento, OraInizio, OraFine, BudMin, BudMax, TipoPreferito, _Pos} ->
+    {nuovo_vincolo, Id, IdEvento,Email, OraInizio, OraFine, BudMin, BudMax, TipoPreferito, _Pos} ->
       io:format("--- [WORKER ~p] VINCOLO ID: ~p PER EVENTO: ~p ---~n", [node(), Id, IdEvento]),
 
       %% Passiamo IdEvento per incrementare il contatore SPECIFICO
@@ -96,7 +96,7 @@ processa_locale(IdEvento, Locale, {U_Start, U_End, BMin, BMax, TipoPref}, TotUse
   SlotSovrapposti = utils:calcola_slot_sovrapposti(U_Start, U_End, L_Apertura, L_Chiusura),
 
   %% Aggiorna le statistiche nel database
-  {atomic, {NewAvgQual, MaxSlotCount}} = db_manager:update_stats(IdEvento, L_Id, QualitaUtente, SlotSovrapposti, TotUsers),
+  {atomic, {NewAvgQual, MaxSlotCount}} = db_manager:update_stats(IdEvento, L_Id, QualitaUtente, SlotSovrapposti),
 
   %% Recupera l'ora migliore per il locale ed evento
   BestHour = db_manager:get_best_hour(IdEvento, L_Id),
