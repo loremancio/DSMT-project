@@ -139,53 +139,57 @@ increment_total_users(IdEvento) ->
   {atomic, Count} = mnesia:transaction(F),
   Count.
 
-%% Trova il miglior locale in tempo reale per un dato evento
-%% Parametri:
-%% - IdEvento: Identificativo dell'evento
-%% Ritorna:
-%% - BestSolution: Record #best_solution con il miglior locale trovato, o 'empty' se nessun dato disponibile
+%% Trova il miglior locale live e restituisce anche il numero di utenti supportati (Hits)
+%% Ritorna: {BestSolutionRecord, MaxSlotsCount} oppure {empty, 0}
 find_best_locale_live(IdEvento) ->
   F = fun() ->
     Locali = mnesia:match_object(#locale{_='_'}),
 
-    %% Recuperiamo TotUsers SOLO per questo evento
+    %% TotUsers LOCALE (serve per il calcolo dell'Itot relativo al nodo)
     TotUsers = case mnesia:read(global_state, {total_users, IdEvento}) of
                  [#global_state{value=V}] -> V;
                  [] -> 0
                end,
 
-    if TotUsers == 0 -> empty; %% Nessun dato per questo evento
+    if TotUsers == 0 -> {empty, 0};
       true ->
-        lists:foldl(fun(LocaleRec, CurrentBest) ->
+        %% Accumulatore ora è una tupla: {MigliorRecord, MigliorHits}
+        lists:foldl(fun(LocaleRec, {CurrentBestRec, CurrentBestHits}) ->
           L_Id = LocaleRec#locale.id,
           Nome = LocaleRec#locale.nome,
 
-          %% Leggiamo statistiche SOLO per questo evento e questo locale
           StatsKey = {IdEvento, L_Id},
           case mnesia:read(stats_locale, StatsKey) of
-            [] -> CurrentBest; %% Nessun voto qui, saltiamo
+            [] -> {CurrentBestRec, CurrentBestHits};
             [Stats] ->
               AvgQual = Stats#stats_locale.somma_qualita / Stats#stats_locale.num_utenti,
 
-              %% Richiamiamo le funzioni helper interne/esterne passando IdEvento
+              %% Questo è il "PESO" (Hits) che ci serve passare al Coordinator
               MaxSlots = get_max_slot_count_internal(IdEvento, L_Id),
+
+              %% Calcoliamo lo score locale
               Itot = utils:calcola_itot(AvgQual, MaxSlots, TotUsers, L_Id),
 
+              %% Troviamo l'ora migliore (solo per costruire il record)
               PatternH = #slot_temporale{key = {IdEvento, L_Id, '_'}, _ = '_'},
               SlotsH = mnesia:match_object(PatternH),
               {BestHour, _} = lists:foldl(fun(#slot_temporale{key={_, _, Ora}, count=C}, {BestOra, MaxC}) ->
                 if C > MaxC -> {Ora, C}; true -> {BestOra, MaxC} end
                                           end, {0, -1}, SlotsH),
 
-              case CurrentBest of
+              NewRec = #best_solution{id_evento=IdEvento, id_locale=L_Id, nome_locale=Nome, ora_inizio=BestHour, score=Itot},
+
+              %% Logica di confronto (Maximization)
+              case CurrentBestRec of
                 empty ->
-                  #best_solution{id_evento=IdEvento, id_locale=L_Id, nome_locale=Nome, ora_inizio=BestHour, score=Itot};
+                  {NewRec, MaxSlots}; %% Primo candidato trovato
                 #best_solution{score=MaxScore} when Itot > MaxScore ->
-                  #best_solution{id_evento=IdEvento, id_locale=L_Id, nome_locale=Nome, ora_inizio=BestHour, score=Itot};
-                _ -> CurrentBest
+                  {NewRec, MaxSlots}; %% Trovato candidato migliore
+                _ ->
+                  {CurrentBestRec, CurrentBestHits} %% Teniamo il precedente
               end
           end
-                    end, empty, Locali)
+                    end, {empty, 0}, Locali) %% Inizializziamo accumulatore a {empty, 0}
     end
       end,
   {atomic, Result} = mnesia:transaction(F),

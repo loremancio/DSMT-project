@@ -2,10 +2,7 @@
 -behavior(gen_server).
 -export([start_link/0, init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2]).
 
-
--define(WORKER_NODES, ['worker1@10.2.1.40', 'worker2@10.2.1.45', 'worker3@10.2.1.46']).
 -define(JAVA_NODE, 'java_backend_node@10.2.1.39').
-
 -include("shared.hrl").
 
 %% Avvia il processo gen_server
@@ -14,19 +11,12 @@ start_link() ->
 
 %% Inizializzazione del coordinatore
 init([]) ->
-  io:format(">> [COORDINATOR] Avviato. Tento connessione ai worker...~n"),
+  io:format(">> [COORDINATOR] Avviato. Avvio discovery dinamico (pg)...~n"),
+  pg:start(pg), %% Avvia il gestore dei gruppi
 
-  %% Tenta di connettersi attivamente a tutti i nodi noti
-  lists:foreach(fun(Node) ->
-    io:format(">> Ping verso ~p... ", [Node]),
-    io:format("~p~n", [net_adm:ping(Node)])
-                end, ?WORKER_NODES),
-
-  %% Monitoraggio nodi
-  net_kernel:monitor_nodes(true),
+  %% Non pinghiamo più i worker staticamente. Aspettiamo che si uniscano loro.
 
   {ok, #{
-    worker_nodes => ?WORKER_NODES,
     sessioni => #{}
   }}.
 
@@ -34,98 +24,108 @@ init([]) ->
 handle_info({nuovo_vincolo, _, _, _, _, _, _, _, _, Posizione} = Msg, State) ->
   io:format(">> Ricevuto vincolo per zona: ~p~n", [Posizione]),
 
-  %% Determina il nodo target in base alla posizione
-  TargetNode = case Posizione of
-                 "NORD"   -> 'worker1@10.2.1.40';
-                 "CENTRO" -> 'worker2@10.2.1.45';
-                 "SUD"    -> 'worker3@10.2.1.46';
-                 _        ->
-                   %% Debug: stampa il valore numerico se non combacia
-                   io:format(">> Valore ricevuto non riconosciuto: ~p~n", [Posizione]),
-                   undefined
-               end,
+  %% 1. TRASFORMAZIONE DINAMICA: "NORD" -> 'gruppo_nord'
+  GroupNameStr = "gruppo_" ++ string:to_lower(Posizione),
+  TargetGroup = try list_to_existing_atom(GroupNameStr)
+                catch error:badarg -> undefined end,
 
-  %% Inoltra il vincolo al nodo target se raggiungibile
-  case TargetNode of
-    undefined -> {noreply, State};
-    Node ->
-     case net_adm:ping(Node) of
-        pong ->
-          io:format(">> Inoltro a {vincolo_service, ~p}~n", [Node]),
-          {vincolo_service, Node} ! Msg;
-        pang ->
-          io:format("!!! ERRORE: Nodo ~p irraggiungibile (giù o crashato). Vincolo perso.~n", [Node])
-      end,
-      {noreply, State}
-  end;
+  case TargetGroup of
+    undefined ->
+      io:format(">> [WARN] Nessun gruppo attivo per la zona: ~p~n", [Posizione]);
+    Group ->
+      %% 2. CHIEDIAMO A PG: Chi c'è in questo gruppo?
+      Members = pg:get_members(Group),
+      case Members of
+        [] ->
+          io:format(">> [ERR] Il gruppo ~p esiste ma è vuoto (nessun worker).~n", [Group]);
+        [WorkerPid | _] ->
+          io:format(">> Inoltro a ~p (Membro di ~p)~n", [WorkerPid, Group]),
+          WorkerPid ! Msg
+      end
+  end,
+  {noreply, State};
 
 %% --- RICEZIONE DA JAVA: Calcolo Ottimo Globale ---
 handle_info({calcola_ottimo_globale, EventId}, State) ->
   io:format(">> Richiesta ottimo globale per evento ~p~n", [EventId]),
-  AllNodes = maps:get(worker_nodes, State),
 
-  %% Filtriamo solo i nodi attivi
-  ActiveNodes = lists:filter(fun(N) -> lists:member(N, nodes()) end, AllNodes),
+  %% 3. BROADCAST GLOBALE tramite il gruppo 'tutti_i_worker'
+  AllWorkers = pg:get_members('tutti_i_worker'),
+  UniqueWorkers = lists:usort(AllWorkers), %% Rimuove duplicati
 
-  %% Inviamo la richiesta solo ai nodi vivi
-  lists:foreach(fun(Node) ->
-    {vincolo_service, Node} ! {richiedi_parziale, self(), EventId}
-                end, ActiveNodes),
-
-  NumExpected = length(ActiveNodes),
-  io:format(">> Attendo ~p risposte (su ~p nodi totali configurati)~n", [NumExpected, length(AllNodes)]),
+  NumExpected = length(UniqueWorkers),
+  io:format(">> Attendo ~p risposte (da worker dinamici)~n", [NumExpected]),
 
   if NumExpected == 0 ->
-    %% Caso limite: nessun worker vivo
     {java_mailbox, ?JAVA_NODE} ! {risultato_finale, EventId, empty},
     {noreply, State};
     true ->
+      %% Inviamo la richiesta a tutti
+      lists:foreach(fun(Pid) ->
+        Pid ! {richiedi_parziale, self(), EventId}
+                    end, UniqueWorkers),
+
       NuovaSessione = #{received => 0, best => undefined, expected => NumExpected},
       SessioniAggiornate = maps:put(EventId, NuovaSessione, maps:get(sessioni, State)),
       {noreply, State#{sessioni => SessioniAggiornate}}
   end;
 
-%% --- RICEZIONE RISPOSTA PARZIALE ---
-handle_info({risposta_parziale, EventId, Sol}, State) ->
+%% --- RICEZIONE RISPOSTA PARZIALE (Logica Pesata) ---
+handle_info({risposta_parziale, EventId, {RecordLocale, Hits}}, State) ->
   Sessioni = maps:get(sessioni, State),
   case maps:find(EventId, Sessioni) of
     {ok, SessInfo} ->
+
+      CurrentBestTuple = maps:get(best, SessInfo),
+      NuovoBestTuple = confronta_ottimo_pesato(CurrentBestTuple, {RecordLocale, Hits}),
+
       NuovoReceived = maps:get(received, SessInfo) + 1,
-      NuovoBest = confronta_ottimo(maps:get(best, SessInfo), Sol),
       NumExpected = maps:get(expected, SessInfo),
 
       if
         NuovoReceived >= NumExpected ->
-          io:format(">> Evento ~p concluso. Ottimo: ~p~n", [EventId, NuovoBest]),
-          {java_mailbox, ?JAVA_NODE} ! {risultato_finale, EventId, NuovoBest},
-          {noreply, State#{sessioni => maps:remove(EventId, Sessioni)}};
+          {VincitoreRecord, _} = NuovoBestTuple,
+          io:format(">> [WINNER] Evento ~p concluso. Vince: ~p~n",
+            [EventId, case VincitoreRecord of undefined -> "Nessuno"; _ -> VincitoreRecord#best_solution.nome_locale end]),
+
+          {java_mailbox, ?JAVA_NODE} ! {risultato_finale, EventId, VincitoreRecord},
+
+          NewSessioni = maps:remove(EventId, Sessioni),
+          {noreply, State#{sessioni => NewSessioni}};
+
         true ->
-          SessAggiornata = SessInfo#{received => NuovoReceived, best => NuovoBest},
+          SessAggiornata = SessInfo#{received => NuovoReceived, best => NuovoBestTuple},
           {noreply, State#{sessioni => maps:put(EventId, SessAggiornata, Sessioni)}}
       end;
-    error ->
-      {noreply, State}
+    error -> {noreply, State}
   end;
 
-%% Monitoraggio Nodi
+%% Monitoraggio Nodi (Solo log)
 handle_info({nodedown, Node}, State) ->
   io:format("!!! ALLARME: Nodo ~p caduto.~n", [Node]),
   {noreply, State};
-
 handle_info({nodeup, Node}, State) ->
   io:format(">> INFO: Nodo ~p connesso.~n", [Node]),
-  {noreply, State}. %% <--- QUESTO PUNTO È FONDAMENTALE (Fine handle_info)
+  {noreply, State}.
 
-%% Callback obbligatorie
 handle_call(_Req, _From, State) -> {reply, ok, State}.
 handle_cast(_Msg, State) -> {noreply, State}.
 terminate(_Reason, _State) -> ok.
 
-%% Logica di confronto per trovare l'ottimo tra le soluzioni che arrivano
-%% dalle varie istanze worker
-confronta_ottimo(CurrentBest, empty) -> CurrentBest;
-confronta_ottimo(undefined, NuovaSol) -> NuovaSol;
-confronta_ottimo(CurrentBest, NuovaSol) ->
-  ScoreCorrente = CurrentBest#best_solution.score,
-  NuovoScore = NuovaSol#best_solution.score,
-  if NuovoScore > ScoreCorrente -> NuovaSol; true -> CurrentBest end.
+%% Logica di confronto pesata (Score * Hits)
+confronta_ottimo_pesato(undefined, {empty, _}) -> {undefined, 0};
+confronta_ottimo_pesato(undefined, {NewRec, NewHits}) -> {NewRec, NewHits};
+confronta_ottimo_pesato({CurRec, CurHits}, {empty, _}) -> {CurRec, CurHits};
+
+confronta_ottimo_pesato({CurRec, CurHits}, {NewRec, NewHits}) ->
+  CurrentImpact = CurRec#best_solution.score * CurHits,
+  NewImpact = NewRec#best_solution.score * NewHits,
+
+  io:format("   [CONFRONTO] ~p (Impact: ~.2f) vs ~p (Impact: ~.2f)~n",
+    [CurRec#best_solution.nome_locale, CurrentImpact,
+      NewRec#best_solution.nome_locale, NewImpact]),
+
+  if
+    NewImpact > CurrentImpact -> {NewRec, NewHits};
+    true -> {CurRec, CurHits}
+  end.
