@@ -62,6 +62,14 @@ Tutti i comandi seguenti devono essere eseguiti dalla directory del progetto Jav
 ```bash
 cd /root/java_backend
 ```
+### 4. Used Containers
+#### Workers Nodes:
+
+* `worker_nord@10.2.1.40`
+* `worker_sud@10.2.1.45`
+* `worker_centro@10.2.1.46`
+#### Erlang Backend:
+* `coordinator_node@10.2.1.39`
 #### Build e Packaging
 Per pulire il progetto e creare il pacchetto (JAR) saltando i test unitari:
 ```bash
