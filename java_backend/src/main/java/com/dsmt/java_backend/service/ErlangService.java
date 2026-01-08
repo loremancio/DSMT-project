@@ -18,7 +18,7 @@ public class ErlangService {
     private OtpMbox mbox;
 
     @Autowired
-    private EventRepository eventRepository; // <--- 1. INIETTA IL REPOSITORY
+    private EventRepository eventRepository;
 
     public ErlangService() throws IOException {
 
@@ -26,14 +26,15 @@ public class ErlangService {
 
     @PostConstruct
     public void init() {
+
         try {
-            // Qui eventRepository è PRONTO
+
             this.javaNode = new OtpNode("java_backend_node@10.2.1.39", COOKIE);
             mbox = javaNode.createMbox("java_mailbox");
 
             System.out.println(">> Nodo Java avviato. Avvio Receiver...");
 
-            // Passiamo il repository (non null) al receiver
+
             ErlangReceiver receiver = new ErlangReceiver(mbox, eventRepository);
 
             Thread t = new Thread(receiver);
@@ -43,6 +44,24 @@ public class ErlangService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void sendTimerRequest(Integer id_evento, long delay){
+        // Creiamo la tupla: {schedule_optimum, EventId, Delay}
+        OtpErlangObject[] msgElements = new OtpErlangObject[3];
+
+        msgElements[0] = new OtpErlangAtom("deadline");
+
+
+        msgElements[1] = new OtpErlangInt(id_evento);
+
+
+        msgElements[2] = new OtpErlangLong(delay);
+
+        OtpErlangTuple msg = new OtpErlangTuple(msgElements);
+
+
+         mbox.send(MAILBOX, REMOTE_NODE_NAME, msg);
     }
 
     public void sendVincolo(Vincolo v) {
@@ -106,5 +125,6 @@ public class ErlangService {
             e.printStackTrace();
         }
     }
+
 
 }

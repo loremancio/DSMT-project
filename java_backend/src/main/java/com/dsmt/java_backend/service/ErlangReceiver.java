@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 public class ErlangReceiver implements Runnable {
     private final OtpMbox mbox;
-    private final EventRepository eventRepository; // <--- NUOVO CAMPO
+    private final EventRepository eventRepository;
     private boolean running = true;
 
     public ErlangReceiver(OtpMbox mbox, EventRepository eventRepository) {
@@ -73,8 +73,7 @@ public class ErlangReceiver implements Runnable {
     }
 
     private void salvaVincitore(Integer eventId, String nome, double score, String orario) {
-        // Nota: eventRepository.findById potrebbe richiedere una transazione o contesto JPA
-        // Se hai problemi di sessione, usa TransactionTemplate o @Transactional sul Service chiamante
+
         try {
             eventRepository.findById(eventId).ifPresent(evento -> {
                 evento.setLuogoScelto(nome);

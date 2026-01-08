@@ -83,7 +83,7 @@ loop(State) ->
       erlang:send_after(5000, self(), check_connection),
       loop(State);
 
-  %% --- NUOVO VINCOLO UTENTE (FIX: Aggiunto _Email) ---
+  %% --- NUOVO VINCOLO UTENTE ---
     {nuovo_vincolo, Id, IdEvento, _Email, OraInizio, OraFine, BudMin, BudMax, TipoPreferito, _Pos} ->
       io:format("--- [WORKER ~p] VINCOLO ID: ~p PER EVENTO: ~p ---~n", [node(), Id, IdEvento]),
 
@@ -121,7 +121,7 @@ processa_locale(IdEvento, Locale, {U_Start, U_End, BMin, BMax, TipoPref}, TotUse
   QualitaUtente = utils:calcola_qualita_utente(L_Tipo, L_Prezzo, TipoPref, BMin, BMax),
   SlotSovrapposti = utils:calcola_slot_sovrapposti(U_Start, U_End, L_Apertura, L_Chiusura),
 
-  %% --- FIX: Rimosso TotUsers dalla chiamata (solo 4 argomenti ora) ---
+
   {atomic, {NewAvgQual, MaxSlotCount}} = db_manager:update_stats(IdEvento, L_Id, QualitaUtente, SlotSovrapposti),
 
   BestHour = db_manager:get_best_hour(IdEvento, L_Id),

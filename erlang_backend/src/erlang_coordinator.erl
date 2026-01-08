@@ -14,10 +14,10 @@ init([]) ->
   io:format(">> [COORDINATOR] Avviato. Avvio discovery dinamico (pg)...~n"),
   pg:start(pg), %% Avvia il gestore dei gruppi
 
-  %% Non pinghiamo più i worker staticamente. Aspettiamo che si uniscano loro.
 
   {ok, #{
-    sessioni => #{}
+    sessioni => #{},
+    timers => #{}
   }}.
 
 %% --- RICEZIONE DA JAVA: Nuovo Vincolo ---
@@ -45,9 +45,29 @@ handle_info({nuovo_vincolo, _, _, _, _, _, _, _, _, Posizione} = Msg, State) ->
   end,
   {noreply, State};
 
+handle_info({deadline, EventId, Delay}, State) ->
+  Timers = maps:get(timers, State),
+
+  case maps:is_key(EventId, Timers) of
+    true ->
+      io:format(">> [IGNORATO] Timer per Evento ~p già presente.~n", [EventId]),
+      {noreply, State};
+
+    false ->
+      io:format(">> [TIMER] Schedulato Evento ~p tra ~p ms~n", [EventId, Delay]),
+
+
+      _TimerRef = erlang:send_after(Delay, self(), {calcola_ottimo_globale, EventId}),
+
+
+      NewTimers = maps:put(EventId, active, Timers),
+      {noreply, State#{timers => NewTimers}}
+  end;
 %% --- RICEZIONE DA JAVA: Calcolo Ottimo Globale ---
 handle_info({calcola_ottimo_globale, EventId}, State) ->
   io:format(">> Richiesta ottimo globale per evento ~p~n", [EventId]),
+  Timers = maps:get(timers, State),
+  NewTimers = maps:remove(EventId, Timers),
 
   %% 3. BROADCAST GLOBALE tramite il gruppo 'tutti_i_worker'
   AllWorkers = pg:get_members('tutti_i_worker'),
@@ -67,8 +87,9 @@ handle_info({calcola_ottimo_globale, EventId}, State) ->
 
       NuovaSessione = #{received => 0, best => undefined, expected => NumExpected},
       SessioniAggiornate = maps:put(EventId, NuovaSessione, maps:get(sessioni, State)),
-      {noreply, State#{sessioni => SessioniAggiornate}}
+      {noreply, State#{sessioni => SessioniAggiornate, timers => NewTimers}}
   end;
+
 
 %% --- RICEZIONE RISPOSTA PARZIALE (Logica Pesata) ---
 handle_info({risposta_parziale, EventId, {RecordLocale, Hits}}, State) ->
@@ -116,7 +137,7 @@ terminate(_Reason, _State) -> ok.
 confronta_ottimo_pesato(undefined, {empty, _}) -> {undefined, 0};
 confronta_ottimo_pesato(undefined, {NewRec, NewHits}) -> {NewRec, NewHits};
 confronta_ottimo_pesato({CurRec, CurHits}, {empty, _}) -> {CurRec, CurHits};
-
+confronta_ottimo_pesato({undefined, _}, {NewRec, NewHits}) -> {NewRec, NewHits};
 confronta_ottimo_pesato({CurRec, CurHits}, {NewRec, NewHits}) ->
   CurrentImpact = CurRec#best_solution.score * CurHits,
   NewImpact = NewRec#best_solution.score * NewHits,

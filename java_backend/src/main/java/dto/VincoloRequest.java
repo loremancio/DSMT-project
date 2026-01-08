@@ -12,7 +12,7 @@ public class VincoloRequest {
     private String emailUtente;
     private Integer idEvento;
 
-    // Nuovi tipi semplificati
+
     private Float oraInizio;
     private Float oraFine;
 

@@ -9,15 +9,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="93be9511-f638-459c-8ac6-7cf3751c376c" name="Changes" comment="versione quasi definitiva. Implementata la comunicazione java-&gt;erlang_coordinator-&gt;erlang_actor-&gt;erlang_coordinator-&gt;java&#10;allo scadere della deadline.&#10;In pratica:&#10; 1.prendo le query con deadline = oggi&#10; 2. avvio un timer&#10; 3.java manda la richiesta per l'ottimo al coordinatore&#10; 4. il coordinatore richiede le sol parziali&#10; 5 gli erlang actor prendono la sol corrente e la mandano&#10; 6. [manca questo passaggio] confronto le sol parziali e scelgo l'ottimo&#10; 7. invio l'ottimo a java&#10; &#10; Per ricevere l'ottimo ho creato un thread a parte che sta in ascolto sulla mailbox.">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/deployment.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
+    <list default="true" id="93be9511-f638-459c-8ac6-7cf3751c376c" name="Changes" comment="definitiva">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/erlang_backend/src/erlang_actor.erl" beforeDir="false" afterPath="$PROJECT_DIR$/erlang_backend/src/erlang_actor.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java_backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/repository/VincoloRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/repository/VincoloRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/erlang_backend/src/erlang_coordinator.erl" beforeDir="false" afterPath="$PROJECT_DIR$/erlang_backend/src/erlang_coordinator.erl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/erlang_backend/src/utils.erl" beforeDir="false" afterPath="$PROJECT_DIR$/erlang_backend/src/utils.erl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/controller/EventController.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/controller/EventController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/controller/UserController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/controller/VincoloController.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/controller/VincoloController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/controller/WebController.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/controller/WebController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/Event.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/Event.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/Vincolo.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/model/Vincolo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/repository/EventRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/repository/EventRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/DeadlineManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/DeadlineManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/ErlangReceiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/ErlangReceiver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/ErlangService.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/ErlangService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/EventService.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/EventService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/dto/EventResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/dto/EventResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/java/dto/VincoloRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/java/dto/VincoloRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/java_backend/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +80,7 @@
     </option>
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
+    <option name="selectedTabId" value="QODANA_PROBLEMS_VIEW_TAB" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -353,7 +363,11 @@
       <workItem from="1767544855167" duration="1825000" />
       <workItem from="1767619786747" duration="1799000" />
       <workItem from="1767699340511" duration="2162000" />
-      <workItem from="1767719631801" duration="977000" />
+      <workItem from="1767719631801" duration="1918000" />
+      <workItem from="1767779945239" duration="2242000" />
+      <workItem from="1767784524493" duration="4953000" />
+      <workItem from="1767802240643" duration="4891000" />
+      <workItem from="1767881955983" duration="7385000" />
     </task>
     <task id="LOCAL-00001" summary="aggiunto le funzionalità di base per la registrazione e login lato backend">
       <option name="closed" value="true" />
@@ -419,7 +433,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767024319669</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="definitiva">
+      <option name="closed" value="true" />
+      <created>1767721365980</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1767721365980</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -456,25 +478,21 @@
     <MESSAGE value="intanto va." />
     <MESSAGE value="versione quasi definitiva. Implementata la comunicazione java-&gt;erlang_coordinator-&gt;erlang_actor-&gt;erlang_coordinator-&gt;java&#10;allo scadere della deadline.&#10;In pratica:&#10; 1.prendo le query con deadline = oggi&#10; 2. avvio un timer&#10; 3.java manda la richiesta per l'ottimo al coordinatore&#10; 4. il coordinatore richiede le sol parziali&#10; 5 gli erlang actor prendono la sol corrente e la mandano&#10; 6. [manca questo passaggio] confronto le sol parziali e scelgo l'ottimo&#10; 7. invio l'ottimo a java&#10; &#10; Per ricevere l'ottimo ho creato un thread a parte che sta in ascolto sulla mailbox." />
     <MESSAGE value="modifiche per far funzionare il codice sui container" />
-    <option name="LAST_COMMIT_MESSAGE" value="modifiche per far funzionare il codice sui container" />
+    <MESSAGE value="definitiva" />
+    <option name="LAST_COMMIT_MESSAGE" value="definitiva" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="ErlangLineBreakpoint">
           <url>file://$PROJECT_DIR$/erlang_backend/src/erlang_coordinator.erl</url>
-          <line>34</line>
+          <line>24</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="ErlangLineBreakpoint">
-          <url>file://$PROJECT_DIR$/erlang_backend/src/erlang_actor.erl</url>
-          <line>104</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="ErlangLineBreakpoint">
-          <url>file://$PROJECT_DIR$/erlang_backend/src/erlang_actor.erl</url>
-          <line>98</line>
-          <option name="timeStamp" value="3" />
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/java_backend/src/main/java/com/dsmt/java_backend/service/ErlangService.java</url>
+          <line>66</line>
+          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

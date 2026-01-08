@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-@NoArgsConstructor // Genera un costruttore vuoto (fondamentale per Spring/Jackson)
+@NoArgsConstructor // Genera un costruttore vuoto
 @AllArgsConstructor
 public class EventResponse {
     private Integer id;
@@ -20,7 +20,7 @@ public class EventResponse {
     private String orarioScelto;
     private Double punteggioFinale;
 
-    // Invece dell'oggetto User completo, restituiamo solo le email
+
     private String emailCreatore;
     private List<String> mailPartecipanti;
 }

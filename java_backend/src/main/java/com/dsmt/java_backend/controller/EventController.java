@@ -1,5 +1,7 @@
 package com.dsmt.java_backend.controller;
 
+import com.dsmt.java_backend.model.Event;
+import com.dsmt.java_backend.service.ErlangService;
 import com.dsmt.java_backend.service.EventService;
 import dto.EventRequest;
 import dto.EventResponse;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -17,8 +20,9 @@ import java.util.List;
 @RequestMapping("/events")
 @RequiredArgsConstructor
 public class EventController {
-
+    private Event ev;
     private final EventService eventService;
+    private final ErlangService erlangService;
 
     @PostMapping("/add")
     public String createEvent(@ModelAttribute EventRequest eventRequest, HttpSession session) {
@@ -27,7 +31,13 @@ public class EventController {
 
         eventRequest.setEmailCreatore(emailUser);
 
-        eventService.addEvent(eventRequest);
+        ev = eventService.addEvent(eventRequest);
+
+        LocalDateTime now = LocalDateTime.now();
+        long delayInMillis = Duration.between(now, ev.getDeadline()).toMillis();
+
+        System.out.println(">> Scheduling evento ID " + ev.getId() + " per le " + ev.getDeadline());
+        erlangService.sendTimerRequest(ev.getId(), delayInMillis);
 
         return "redirect:/";
     }

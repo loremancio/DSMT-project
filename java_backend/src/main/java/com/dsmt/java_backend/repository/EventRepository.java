@@ -15,11 +15,7 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     @Query("SELECT e FROM Event e WHERE e.isPrivato = false AND e.deadline >=:adesso")
     List<Event> findEventiPubbliciFuturi(@Param("adesso") LocalDateTime adesso);
 
-    /* SELECT e FROM Event e: Seleziona oggetti Evento.
-       JOIN e.partecipanti p: "Entra" nella lista dei partecipanti dell'evento (JPA sa già quale tabella usare grazie al @ManyToMany).
-        WHERE p.id = :userId: ...dove tra i partecipanti c'è l'utente con questo ID.
-        AND e.isPrivato = true: ...e l'evento è privato.
-    */
+
     @Query("SELECT e FROM Event e join e.partecipanti ep where ep.id = :myID and e.isPrivato = true")
     List <Event> getAllMyPrivateEvents(@Param("myID")Integer myID);
 

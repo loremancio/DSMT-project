@@ -21,10 +21,49 @@ calcola_qualita_utente(TipoLocale, PrezzoLocale, TipoPreferito, BudMin, BudMax) 
   (ISim * ?W_SIM) + (IBudget * ?W_BUDGET).
 
 %% --- Matrice di Somiglianza ---
-get_similarity("Pub", "Birreria") -> 0.9;
-get_similarity("Birreria", "Pub") -> 0.9;
 get_similarity("Ristorante", "Pub") -> 0.2;
 get_similarity("Pub", "Ristorante") -> 0.2;
+get_similarity("Ristorante", "Fast Food") -> 0.2;
+get_similarity("Fast Food", "Ristorante") -> 0.2;
+get_similarity("Ristorante", "Cocktail Bar") -> 0.15;
+get_similarity("Cocktail Bar", "Ristorante") -> 0.15;
+get_similarity("Ristorante", "Teatro") -> 0.1;
+get_similarity("Teatro", "Ristorante") -> 0.1;
+get_similarity("Ristorante", "Gelateria") -> 0.15;
+get_similarity("Gelateria", "Ristorante") -> 0.15;
+get_similarity("Ristorante", "Sala Giochi") -> 0.05;
+get_similarity("Sala Giochi", "Ristorante") -> 0.05;
+get_similarity("Pub", "Fast Food") -> 0.4;
+get_similarity("Fast Food", "Pub") -> 0.4;
+get_similarity("Pub", "Cocktail Bar") -> 0.7;
+get_similarity("Cocktail Bar", "Pub") -> 0.7;
+get_similarity("Pub", "Teatro") -> 0.1;
+get_similarity("Teatro", "Pub") -> 0.1;
+get_similarity("Pub", "Gelateria") -> 0.1;
+get_similarity("Gelateria", "Pub") -> 0.1;
+get_similarity("Pub", "Sala Giochi") -> 0.5;
+get_similarity("Sala Giochi", "Pub") -> 0.5;
+get_similarity("Fast Food", "Cocktail Bar") -> 0.1;
+get_similarity("Cocktail Bar", "Fast Food") -> 0.1;
+get_similarity("Fast Food", "Teatro") -> 0.05;
+get_similarity("Teatro", "Fast Food") -> 0.05;
+get_similarity("Fast Food", "Gelateria") -> 0.5;
+get_similarity("Gelateria", "Fast Food") -> 0.5;
+get_similarity("Fast Food", "Sala Giochi") -> 0.7;
+get_similarity("Sala Giochi", "Fast Food") -> 0.7;
+get_similarity("Cocktail Bar", "Teatro") -> 0.3;
+get_similarity("Teatro", "Cocktail Bar") -> 0.3;
+get_similarity("Cocktail Bar", "Gelateria") -> 0.1;
+get_similarity("Gelateria", "Cocktail Bar") -> 0.1;
+get_similarity("Cocktail Bar", "Sala Giochi") -> 0.2;
+get_similarity("Sala Giochi", "Cocktail Bar") -> 0.2;
+get_similarity("Teatro", "Gelateria") -> 0.1;
+get_similarity("Gelateria", "Teatro") -> 0.1;
+get_similarity("Teatro", "Sala Giochi") -> 0.05;
+get_similarity("Sala Giochi", "Teatro") -> 0.05;
+get_similarity("Gelateria", "Sala Giochi") -> 0.6;
+get_similarity("Sala Giochi", "Gelateria") -> 0.6;
+
 get_similarity(X, X) -> 1.0; %% Stesso tipo
 get_similarity(_, _) -> 0.1. %% Default basso
 

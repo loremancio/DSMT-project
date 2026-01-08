@@ -51,10 +51,10 @@ public class WebController {
                               HttpSession session,
                               Model model) {
         try {
-            // Chiamata DIRETTA al service (Niente più HTTP/JSON!)
+
             User user = userService.login(email, psw);
 
-            // Salviamo solo il nome in sessione come volevi
+
             session.setAttribute("user", user.getEmail());
             session.setAttribute("nome", user.getNome());
             session.setAttribute("cognome", user.getCognome());

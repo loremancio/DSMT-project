@@ -6,6 +6,8 @@ import com.dsmt.java_backend.repository.EventRepository;
 import com.dsmt.java_backend.repository.UserRepository;
 import dto.EventRequest;
 import dto.EventResponse;
+
+import java.time.Duration;
 import java.time.ZoneId;
 import io.micrometer.observation.ObservationFilter;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +51,6 @@ public class EventService {
                         .orElseThrow(() -> new RuntimeException("User not found"));
                 newEvent.getPartecipanti().add(partecipanti);
             }
-
 
         return eventRepository.save(newEvent);
     }
@@ -127,11 +128,7 @@ public class EventService {
     }
 
     public Optional<EventResponse> getEventById(Integer id) {
-         /*Visto che il tuo metodo restituisce già un Optional<EventResponse>
-          possiamo usare la funzione .map(). È molto elegante:
-          trasforma l'oggetto dentro l'Optional solo se esiste; se non esiste,
-           restituisce un Optional vuoto automaticamente.
-         * */
+
         return eventRepository.findById(id)
                 .map(event -> conversione_singolo(event));
     }
@@ -143,12 +140,12 @@ public class EventService {
     }
     public List<EventResponse> getAllFuturePublicEvents(){
 
-        return conversione(eventRepository.findEventiPubbliciFuturi(LocalDateTime.now(ZoneId.of("UTC"))));
+        return conversione(eventRepository.findEventiPubbliciFuturi(LocalDateTime.now(ZoneId.of("Europe/Rome"))));
     }
     public List<EventResponse> getAllMyPrivateEvents(Integer user_id){
         return conversione(eventRepository.getAllMyPrivateEvents(user_id));
     }
     public List<EventResponse> getAllMyPrivateFutureEvents(Integer user_id){
-        return conversione(eventRepository.getAllMyPrivateFutureEvents(LocalDateTime.now(ZoneId.of("UTC")), user_id));
+        return conversione(eventRepository.getAllMyPrivateFutureEvents(LocalDateTime.now(ZoneId.of("Europe/Rome")), user_id));
     }
 }

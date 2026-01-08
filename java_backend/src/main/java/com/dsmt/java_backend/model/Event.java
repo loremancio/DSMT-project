@@ -29,11 +29,11 @@ public class Event {
     @ManyToOne
     @JoinColumn(name = "creatore_id", nullable = false)
     private User creatore;
-    //correggere mettere la email
 
-    // Altri attributi diretti della tabella 'event'
+
+
     @Column(name = "privato")
-    private Boolean isPrivato; // Uso un nome più standard per un campo booleano
+    private Boolean isPrivato;
 
     @Column(name = "nome")
     private String nome;
@@ -46,13 +46,13 @@ public class Event {
 
 
     private Set<User> partecipanti = new HashSet<>();
-    //correggere Set <String> email_partecipanti
+
 
     @Column(name = "descrizione")
     private String descrizione;
 
     @Column(name = "deadline")
-    private LocalDateTime deadline; // Utilizzo LocalDateTime per una colonna data/ora
+    private LocalDateTime deadline;
 
     @Column(name = "luogo_scelto")
     private String luogoScelto;
@@ -63,6 +63,5 @@ public class Event {
     @Column(name = "orario_scelto")
     private String orarioScelto;
 
-    // Nota: Non è necessario includere esplicitamente i getter/setter,
-    // l'annotazione @Data di Lombok li gestisce automaticamente.
+
 }

@@ -32,7 +32,7 @@ public class VincoloController {
             // Imposta l'utente loggato come autore del vincolo
             vincoloDto.setEmailUtente(emailUser);
 
-            // Prova a salvare
+
             vincoloService.aggiungiVincolo(vincoloDto);
 
             // Se va bene, prepara messaggio verde

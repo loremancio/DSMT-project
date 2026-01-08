@@ -25,22 +25,22 @@ public class Vincolo {
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
-    // --- CAMPI DATI SEMPLIFICATI ---
+
 
     @Column(name = "ora_inizio")
-    private Float oraInizio; // Es. 14.30
+    private Float oraInizio;
 
     @Column(name = "ora_fine")
-    private Float oraFine;   // Es. 18.00
+    private Float oraFine;
 
     @Column(name = "tipo_luogo")
     private String tipoLuogo;
 
     @Column(name = "budget_min")
-    private Integer budgetMin; // Es. 15 (niente decimali)
+    private Integer budgetMin;
 
     @Column(name = "budget_max")
-    private Integer budgetMax; // Es. 30 (niente decimali)
+    private Integer budgetMax;
 
     @Column(name = "posizione")
     private String posizione;
