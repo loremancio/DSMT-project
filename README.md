@@ -66,8 +66,8 @@ cd /root/java_backend
 #### Workers Nodes:
 
 * `worker_nord@10.2.1.40`
-* `worker_sud@10.2.1.45`
-* `worker_centro@10.2.1.46`
+* `worker_centro@10.2.1.45`
+* `worker_sud@10.2.1.46`
 #### Erlang Backend:
 * `coordinator_node@10.2.1.39`
 #### Build e Packaging
