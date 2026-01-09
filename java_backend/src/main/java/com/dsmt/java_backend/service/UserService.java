@@ -6,6 +6,9 @@ import com.dsmt.java_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -14,7 +17,28 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
-    public User createUser(User user) {return userRepository.save(user);}
+    private String hashPassword(String plainPassword) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] encodedHash = digest.digest(plainPassword.getBytes(StandardCharsets.UTF_8));
+
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : encodedHash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Errore durante l'hashing della password", e);
+        }
+    }
+    public User createUser(User user) {
+        user.setPsw(hashPassword(user.getPsw()));
+        return userRepository.save(user);
+    }
     /**
      * Registra un nuovo utente nel database.
      * @param user L'oggetto utente da registrare.
@@ -25,6 +49,9 @@ public class UserService {
         if(userRepository.existsByEmail(user.getEmail())){
             throw new IllegalStateException("Email già registrata");
         }
+
+        String hashPassword = hashPassword(user.getPsw());
+        user.setPsw(hashPassword);
         return userRepository.save(user);
     }
     /**
@@ -38,7 +65,9 @@ public class UserService {
         if(userOptional.isEmpty()) // non so se va ho modificato un po di roba
             throw new IllegalStateException("Credenziali non valide");
         User user = userOptional.get();
-        if(Objects.equals(user.getPsw(), password)){
+
+        String hashedInputPassword = hashPassword(password);
+        if(Objects.equals(user.getPsw(), hashedInputPassword)){
             return user;
         }else {
             throw new IllegalStateException("Credenziali non valide");
