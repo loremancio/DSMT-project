@@ -14,6 +14,7 @@ init([]) ->
   io:format(">> [COORDINATOR] Avviato. Avvio discovery dinamico (pg)...~n"),
   pg:start(pg), %% Avvia il gestore dei gruppi
 
+  net_kernel:monitor_nodes(true),
 
   {ok, #{
     sessioni => #{},
