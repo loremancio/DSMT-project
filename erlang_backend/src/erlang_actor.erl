@@ -100,6 +100,8 @@ loop(State) ->
       io:format(">> [WORKER ~p] Calcolo ottimo parziale per Evento ~p~n", [node(), E_id]),
 
       {BestRec, Hits} = db_manager:find_best_locale_live(E_id),
+      io:format("   Ottimo parziale trovato: ~p~n", [BestRec]),
+      io:format("   Ottimo parziale calcolato: ~p utenti hanno contribuito.~n", [Hits]),
 
       case BestRec of
         empty -> ok;

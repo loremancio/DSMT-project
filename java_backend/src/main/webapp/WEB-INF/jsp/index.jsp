@@ -53,7 +53,7 @@
                     <tr>
                         <td>Invitati:<br><small>(email separate da virgola)</small></td>
                         <td>
-                            <textarea name="mail_partecipanti" placeholder="mario@email.com, luigi@email.com" rows="3" style="width:100%"></textarea>
+                            <textarea name="mailPartecipanti" placeholder="mario@email.com, luigi@email.com" rows="3" style="width:100%"></textarea>
                         </td>
                     </tr>
                     <tr>

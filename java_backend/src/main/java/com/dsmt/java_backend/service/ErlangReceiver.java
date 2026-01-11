@@ -44,28 +44,35 @@ public class ErlangReceiver implements Runnable {
                 int eventId = (int) eventIdObj.longValue();
 
                 // 2. Prendi la TUPLA della soluzione (Indice 2)
-                OtpErlangTuple bestRecord = (OtpErlangTuple) msg.elementAt(2);
+                OtpErlangObject rawRecord = msg.elementAt(2);
 
-                // La struttura della tupla Erlang corrisponde al record:
-                // #best_solution{id_evento, id_locale, nome_locale, ora_inizio, score}
-                // Indici Tupla: 0=tag, 1=id_ev, 2=id_loc, 3=nome_loc, 4=ora, 5=score
+                if (rawRecord instanceof OtpErlangTuple) {
+                    OtpErlangTuple bestRecord = (OtpErlangTuple) rawRecord;
 
-                OtpErlangString nomeLocaleObj = (OtpErlangString) bestRecord.elementAt(3);
-                String nomeLocale = nomeLocaleObj.stringValue();
+                    // La struttura della tupla Erlang corrisponde al record:
+                    // #best_solution{id_evento, id_locale, nome_locale, ora_inizio, score}
+                    // Indici Tupla: 0=tag, 1=id_ev, 2=id_loc, 3=nome_loc, 4=ora, 5=score
 
-                OtpErlangObject oraObj = bestRecord.elementAt(4);
-                long oraInizio = (oraObj instanceof OtpErlangLong) ? ((OtpErlangLong) oraObj).longValue() : 0;
-                String orarioFormattato = String.format("%02d:00 - %02d:00", oraInizio, oraInizio + 2);
+                    OtpErlangString nomeLocaleObj = (OtpErlangString) bestRecord.elementAt(3);
+                    String nomeLocale = nomeLocaleObj.stringValue();
 
-                OtpErlangDouble scoreObj = (OtpErlangDouble) bestRecord.elementAt(5);
-                double score = scoreObj.doubleValue();
+                    OtpErlangObject oraObj = bestRecord.elementAt(4);
+                    long oraInizio = (oraObj instanceof OtpErlangLong) ? ((OtpErlangLong) oraObj).longValue() : 0;
+                    String orarioFormattato = String.format("%02d:00 - %02d:00", oraInizio, oraInizio + 1);
 
-                System.out.println(">>> [VINCITORE]: Evento " + eventId + " vince " + nomeLocale + " con score " + score + " alle ore " + oraInizio);
+                    OtpErlangDouble scoreObj = (OtpErlangDouble) bestRecord.elementAt(5);
+                    double score = scoreObj.doubleValue();
 
-                System.out.println(">>> SALVATAGGIO SU DB: " + nomeLocale);
+                    System.out.println(">>> [VINCITORE]: Evento " + eventId + " vince " + nomeLocale + " con score " + score + " alle ore " + oraInizio);
 
-                // --- SALVATAGGIO SU DB ---
-                salvaVincitore(eventId, nomeLocale, score, orarioFormattato);
+                    System.out.println(">>> SALVATAGGIO SU DB: " + nomeLocale);
+
+                    // --- SALVATAGGIO SU DB ---
+                    salvaVincitore(eventId, nomeLocale, score, orarioFormattato);
+                } else {
+                    System.out.println(">>> [INFO]: Nessun locale trovato per l'evento " + eventId);
+                    //salvaVincitore(eventId, "Nessuno", 0.0, "N/A");
+                }
             }else{System.out.println("qualcosa non va.");}
         } catch (Exception e) {
             e.printStackTrace();

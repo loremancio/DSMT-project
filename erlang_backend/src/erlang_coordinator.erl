@@ -107,10 +107,17 @@ handle_info({risposta_parziale, EventId, {RecordLocale, Hits}}, State) ->
       if
         NuovoReceived >= NumExpected ->
           {VincitoreRecord, _} = NuovoBestTuple,
-          io:format(">> [WINNER] Evento ~p concluso. Vince: ~p~n",
-            [EventId, case VincitoreRecord of undefined -> "Nessuno"; _ -> VincitoreRecord#best_solution.nome_locale end]),
+          SafeRecord = case VincitoreRecord of
+                         undefined ->
+                           %% Creiamo una tupla finta che rispetta la struttura #best_solution
+                           %% Struttura: {tag, id_ev, id_loc, nome, ora, score}
+                           {best_solution, EventId, 0, "Nessuno", 0, 0.0};
+                         _ ->
+                           VincitoreRecord
+                       end,
+          io:format(">> [WINNER] Evento ~p concluso. Invio a Java: ~p~n", [EventId, SafeRecord]),
 
-          {java_mailbox, ?JAVA_NODE} ! {risultato_finale, EventId, VincitoreRecord},
+          {java_mailbox, ?JAVA_NODE} ! {risultato_finale, EventId, SafeRecord},
 
           NewSessioni = maps:remove(EventId, Sessioni),
           {noreply, State#{sessioni => NewSessioni}};
