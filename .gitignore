@@ -1,0 +1,20 @@
+# --- IntelliJ IDEA ---
+.idea/
+*.iml
+*.iws
+
+# --- Java ---
+target/
+*.class
+*.log
+
+# --- Erlang ---
+_build/
+erl_crash.dump
+*.beam
+.rebar3/
+.rebar/
+
+# --- OS Files ---
+.DS_Store
+Thumbs.db
